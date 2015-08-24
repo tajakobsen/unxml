@@ -10,7 +10,7 @@ import com.google.inject.name.Names;
 import com.nerdforge.unxml.parsers.*;
 import com.nerdforge.unxml.parsers.factory.ArrayParserFactory;
 import com.nerdforge.unxml.xml.XmlUtil;
-import org.apache.xerces.impl.Constants;
+import static org.apache.xerces.impl.Constants.*;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
@@ -60,12 +60,14 @@ public class UnXmlModule extends PrivateModule {
 
     private static DocumentBuilderFactory documentBuilderFactory() {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance("org.apache.xerces.jaxp.DocumentBuilderFactoryImpl", UnXmlModule.class.getClassLoader());
-            factory.setFeature(Constants.SAX_FEATURE_PREFIX + Constants.EXTERNAL_GENERAL_ENTITIES_FEATURE, false);
-            factory.setFeature(Constants.SAX_FEATURE_PREFIX + Constants.EXTERNAL_PARAMETER_ENTITIES_FEATURE, false);
-            factory.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.DISALLOW_DOCTYPE_DECL_FEATURE, true);
+            String name = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(name, UnXmlModule.class.getClassLoader());
+            factory.setFeature(SAX_FEATURE_PREFIX + EXTERNAL_GENERAL_ENTITIES_FEATURE, false);
+            factory.setFeature(SAX_FEATURE_PREFIX + EXTERNAL_PARAMETER_ENTITIES_FEATURE, false);
+            factory.setFeature(XERCES_FEATURE_PREFIX + DISALLOW_DOCTYPE_DECL_FEATURE, true);
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             factory.setNamespaceAware(true);
+
             return factory;
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);

@@ -5,20 +5,18 @@ import com.google.inject.Inject;
 import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 import com.nerdforge.unxml.parsers.Parser;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class ObjectParserBuilder {
+    private Map<String, Parser> attributes = Maps.newHashMap();
+    private Optional<String> xpath = Optional.empty();
     private SimpleParsers simpleParsers;
+
     @Inject
     public ObjectParserBuilder(SimpleParsers simpleParsers) {
         this.simpleParsers = simpleParsers;
     }
-
-    private Map<String, Parser> attributes = new HashMap<>();
-    private Optional<String> xpath = Optional.empty();
 
     /**
      * Spesify the xpath to the root node, to parse attributes from
@@ -75,11 +73,15 @@ public class ObjectParserBuilder {
         return attribute(key, node -> simpleParsers.elementParser(xpath, parser).apply(node));
     }
 
+    /**
+     * Builds the ObjectParser with the attributes specified.
+     * @return An ObjectParser
+     */
     public ObjectParser build(){
         return new ObjectParser(xpath.map(this::wrapAttributes).orElse(attributes));
     }
 
     private Map<String, Parser> wrapAttributes(String path){
-        return Maps.transformEntries(attributes, (key, parser) -> simpleParsers.elementParser(path, parser));
+        return Maps.transformValues(attributes, parser -> simpleParsers.elementParser(path, parser));
     }
 }

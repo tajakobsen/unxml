@@ -13,7 +13,6 @@ import java.util.function.Function;
 
 public class Parsers {
     private static Optional<Injector> injector = Optional.empty();
-    private static Optional<UnXml> parserUtil = Optional.empty();
 
     /**
      * Returns a new ObjectParserBuilder.

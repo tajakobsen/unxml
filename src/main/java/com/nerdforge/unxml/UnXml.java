@@ -11,7 +11,6 @@ import com.nerdforge.unxml.parsers.builders.ObjectParserBuilder;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 public class UnXml {
@@ -50,6 +49,16 @@ public class UnXml {
     public ObjectParserBuilder obj(){
         return objectParserBuilder.get();
     }
+
+    /**
+     * Returns a new ObjectParserBuilder.
+     * @param xpath Root xpath to start parsing from
+     * @return  A new instance of ObjectParserBuilder
+     */
+    public ObjectParserBuilder obj(String xpath){
+        return objectParserBuilder.get().xpath(xpath);
+    }
+
 
     /**
      * Returns an ArrayParser which will process a Node into an ArrayNode of Strings

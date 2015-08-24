@@ -29,18 +29,27 @@ public final class SimpleNamespaceContext implements NamespaceContext {
         prefixes = Multimaps.invertFrom(Multimaps.forMap(this.namespaces), ArrayListMultimap.create());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getNamespaceURI(String prefix) {
         checkNotNull(prefix);
         return namespaces.getOrDefault(prefix, NULL_NS_URI);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPrefix(String namespaceURI) {
         checkNotNull(namespaceURI);
         return prefixes.get(namespaceURI).stream().findFirst().orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterator<String> getPrefixes(String namespaceURI){
         checkNotNull(namespaceURI);

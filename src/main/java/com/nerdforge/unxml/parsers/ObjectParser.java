@@ -13,13 +13,9 @@ public class ObjectParser implements Parser {
     }
 
     @Override
-    public ObjectNode apply(Node node) {
+    public ObjectNode apply(final Node node) {
         ObjectNode json = JsonNodeFactory.instance.objectNode();
-
-        attributes.keySet()
-                .stream()
-                .forEach(key -> json.set(key, attributes.get(key).apply(node)));
-
+        attributes.forEach((key, parser) -> json.set(key, parser.apply(node)));
         return json;
     }
 }

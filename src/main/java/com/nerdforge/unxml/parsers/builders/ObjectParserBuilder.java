@@ -1,26 +1,34 @@
 package com.nerdforge.unxml.parsers.builders;
 
-import com.fasterxml.jackson.databind.node.NullNode;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 import com.nerdforge.unxml.parsers.Parser;
-import com.nerdforge.unxml.xml.XmlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ObjectParserBuilder {
     private SimpleParsers simpleParsers;
-    private XmlUtil xmlUtil;
-
     @Inject
-    public ObjectParserBuilder(SimpleParsers simpleParsers,  XmlUtil xmlUtil) {
+    public ObjectParserBuilder(SimpleParsers simpleParsers) {
         this.simpleParsers = simpleParsers;
-        this.xmlUtil = xmlUtil;
     }
 
     private Map<String, Parser> attributes = new HashMap<>();
+    private Optional<String> xpath = Optional.empty();
+
+    /**
+     * Spesify the xpath to the root node, to parse attributes from
+     * @param root The xpath to the root node
+     * @return The builder itself, so commands can be chained
+     */
+    public ObjectParserBuilder xpath(String root){
+        this.xpath = Optional.of(root);
+        return this;
+    }
 
     /**
      * Specify an attribute by key, that reads the text value on an xpath
@@ -64,12 +72,14 @@ public class ObjectParserBuilder {
      * @return The builder itself, so commands can be chained
      */
     public ObjectParserBuilder attribute(String key, String xpath, Parser parser){
-        return attribute(key, node -> xmlUtil.parseNode(xpath, node)
-                .map(parser)
-                .orElse(NullNode.getInstance()));
+        return attribute(key, node -> simpleParsers.elementParser(xpath, parser).apply(node));
     }
 
     public ObjectParser build(){
-        return new ObjectParser(attributes);
+        return new ObjectParser(xpath.map(this::wrapAttributes).orElse(attributes));
+    }
+
+    private Map<String, Parser> wrapAttributes(String path){
+        return Maps.transformEntries(attributes, (key, parser) -> simpleParsers.elementParser(path, parser));
     }
 }

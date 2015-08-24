@@ -1,11 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '0.6'
+archivesBaseName = "unxml"
 group   = 'com.nerdforge.unxml'
+version = '0.6'
 
 repositories {
     mavenLocal()
@@ -45,4 +47,52 @@ task sourcesJar(type: Jar) {
 
 artifacts {
     archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'unXml'
+                packaging 'jar'
+                description 'Java 8 library that transforms XML to JSON.'
+                url 'https://github.com/tajakobsen/unxml'
+
+                scm {
+                    connection 'scm:git:https://github.com/tajakobsen/unxml.git'
+                    developerConnection 'scm:git:https://github.com/tajakobsen/unxml.git'
+                    url 'https://github.com/tajakobsen/unxml'
+                }
+
+                licenses {
+                    license {
+                        name 'GNU General Public License, version 2'
+                        url 'http://www.gnu.org/licenses/old-licenses/gpl-2.0.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'tajakobsen'
+                        name 'Tom Arild Jakobsen'
+                        email 'tajakobsen@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }

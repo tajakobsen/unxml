@@ -1,4 +1,4 @@
-# unXML
+# unXml
 
 Java 8 Library for mapping XPaths to JSON-attributes.
 
@@ -42,8 +42,8 @@ List<JsonNode> results = documents.stream().map(parser).collect(toList());
 #### Creating the Parser
 
 ```java
-import com.nerdforge.xml.Parsers;
-import static com.nerdforge.xml.Parsers.with;
+import com.nerdforge.unxml.Parsers;
+import static com.nerdforge.unxml.Parsers.with;
 ...
 
 public class MyController {
@@ -98,7 +98,7 @@ public class MyController {
 #### Creating the Parser
 
 ```java
-import static com.nerdforge.xml.Parsers.*; // (1)
+import static com.nerdforge.unxml.Parsers.*; // (1)
 ...
 
 public class MyController {
@@ -147,7 +147,7 @@ You can of course combine [ObjectParsers](src/main/java/com/nerdforge/unxml/pars
 #### Creating the Parser
 
 ```java
-import static com.nerdforge.xml.Parsers.*;
+import static com.nerdforge.unxml.Parsers.*;
 ...
 
 public class MyController {

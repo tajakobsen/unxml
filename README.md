@@ -133,18 +133,19 @@ You can of course combine [ObjectParsers](src/main/java/com/nerdforge/unxml/pars
 #### The input XML string
 
 ```xml
-<root>
-  <user id="1">
+<?xml version=\"1.0\"?>
+<feed xmlns=\"http://www.w3.org/2005/Atom\">
+  <entry id=\"1\">
     <name>Homer Simpson</name>
     <birthday>1956-03-01</birthday>
-    <email>chunkylover53@aol.com</email>
+    <email xmlns=\"http://www.w3.org/2007/app\">chunkylover53@aol.com</email>
     <phoneNumbers>
       <home>5551234</home>
       <mobile>5555678</mobile>
       <work>5559991</work>
     </phoneNumbers>
-  </user>
-</root>
+  </entry>
+</feed>
 ```
 
 #### Creating the Parser
@@ -152,16 +153,16 @@ You can of course combine [ObjectParsers](src/main/java/com/nerdforge/unxml/pars
 ```java
 public class MyController {
   public ArrayNode getUsersFromXml(String inputXmlString) {
-    Parsing parsing = ParsingFactory.getInstance(namespaces()).create();
+    Parsing parsing = ParsingFactory.getInstance(namespaces()).create(); // (1)
     Document input = parsing.xml().document(inputXmlString);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    Parser dateParser = parsing.simple().dateParser(formatter); // (2a)
+    Parser dateParser = parsing.simple().dateParser(formatter); // (2)
 
     ArrayParser parser = parsing.arr("/a:feed/a:entry",
       parsing.obj()
         .attribute("id", "@id", parsing.with(Integer::parseInt)) // (3)
         .attribute("name", "a:name")
-        .attribute("birthday", "a:birthday", dateParser) // (2b)
+        .attribute("birthday", "a:birthday", dateParser)
         .attribute("email", "app:email") // (4)
         .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt))) // (5)
     );
@@ -170,7 +171,7 @@ public class MyController {
   }
   
   private Map<String, String> namespaces(){
-    return Map<String, String> namespaces = new HashMap<String, String>(){{ // (1)
+    return new HashMap<String, String>(){{
         put("a", "http://www.w3.org/2005/Atom");
         put("app", "http://www.w3.org/2007/app");
     }};
@@ -178,9 +179,11 @@ public class MyController {
 }
 ```
 
- 1. The xpath selects on an attribute in the xml
- 2. We use a [DateTimeFormatter](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html) to parse the value as a [LocalDate](https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html).
- 3. We do a xpath selection on a wildcard, to create an array. The `String` contents of the nodes are parsed into `Integers`.
+ 1. Creates the instance of `Parsing`, but with XML-namespaces.
+ 2. Creates a `dateParser` that will parse dates with the format `yyyy-MM-dd`.
+ 3. The xpath selects on an attribute in the xml
+ 4. Use the preconfigured namespace `app` to select the email.
+ 5. We do a xpath selection on a wildcard, to create an array. The `String` contents of the nodes are parsed into `Integers`.
 
 #### Return Json object
 

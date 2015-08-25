@@ -20,16 +20,22 @@ And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Docum
 Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [functional interface](https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html), it can be mapped directly, like this:
 
 ```java
-Parsing parsing = ParsingFactory.getInstance(namespaces).create();
+Parsing parsing = ParsingFactory.getInstance(namespaces).create(); // (1)
 Parser parser = ... // se below for examples
-Document document = parsing.xml().document(inputXmlString);
+Document document = parsing.xml().document(inputXmlString); // (2)
 
-// look ma, no: Optional.of(document).map(parser::apply);
-Optional<JsonNode> result = Optional.of(document).map(parser); 
+// Apply to an Optional
+Optional<JsonNode> result = Optional.of(document).map(parser); // (3)
 
+// Apply to a Stream
 List<Document> documents = ...
-List<JsonNode> results = documents.stream().map(parser).collect(toList());
+List<JsonNode> results = documents.stream().map(parser).collect(toList()); // (4)
 ```
+
+ 1. Uses the [ParsingFactory](src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java) to get an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
+ 2. Parsing also gives access to an XML-utility object by using the `xml()`-method.
+ 3. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
+ 4. Shorthand for `documents.stream().map(parser::apply).collect(toList())`
 
 ## Example - Parsing an object
 
@@ -155,8 +161,7 @@ public class MyController {
   public ArrayNode getUsersFromXml(String inputXmlString) {
     Parsing parsing = ParsingFactory.getInstance(namespaces()).create(); // (1)
     Document input = parsing.xml().document(inputXmlString);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    Parser dateParser = parsing.simple().dateParser(formatter); // (2)
+    Parser dateParser = parsing.simple().dateParser(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // (2)
 
     ArrayParser parser = parsing.arr("/a:feed/a:entry", // (3)
       parsing.obj()

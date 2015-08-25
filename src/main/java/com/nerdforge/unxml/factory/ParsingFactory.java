@@ -1,20 +1,18 @@
 package com.nerdforge.unxml.factory;
 
 import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.nerdforge.unxml.Parsing;
 import com.nerdforge.unxml.UnXmlModule;
-import com.nerdforge.unxml.parsers.SimpleParsers;
-
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Map;
 
 public class ParsingFactory {
-    private final Injector injector;
+    private final Provider<Parsing> parsing;
 
     @Inject
-    private ParsingFactory(Injector injector){
-        this.injector = injector;
+    private ParsingFactory(Provider<Parsing> parsing){
+        this.parsing = parsing;
     }
 
     /**
@@ -34,11 +32,11 @@ public class ParsingFactory {
         return Guice.createInjector(new UnXmlModule(namespaces)).getInstance(ParsingFactory.class);
     }
 
-    public Parsing get(){
-        return injector.getInstance(Parsing.class);
-    }
-
-    public SimpleParsers parsers(){
-        return injector.getInstance(SimpleParsers.class);
+    /**
+     * Returns a new Parsing object with all the utility methods to create parsers.
+     * @return An instance of Parsing
+     */
+    public Parsing create(){
+        return parsing.get();
     }
 }

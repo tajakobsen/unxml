@@ -22,22 +22,22 @@ public class ParsingTest {
             put("a", "http://www.w3.org/2005/Atom");
             put("app", "http://www.w3.org/2007/app");
         }};
-        parsing = ParsingFactory.getInstance(namespaces).get();
+        parsing = ParsingFactory.getInstance(namespaces).create();
     }
 
     @Test
     public void testParseObject() throws Exception {
-        String content = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">\n" +
-                "  <entry id=\"1\">\n" +
-                "    <name>Homer Simpson</name>\n" +
-                "    <birthday>1956-03-01</birthday>\n" +
-                "    <email>chunkylover53@aol.com</email>\n" +
-                "    <phoneNumbers>\n" +
-                "      <home>5551234</home>\n" +
-                "      <mobile>5555678</mobile>\n" +
-                "      <work>5559991</work>\n" +
-                "    </phoneNumbers>\n" +
-                "  </entry>\n" +
+        String content = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">" +
+                "  <entry id=\"1\">" +
+                "    <name>Homer Simpson</name>" +
+                "    <birthday>1956-03-01</birthday>" +
+                "    <email>chunkylover53@aol.com</email>" +
+                "    <phoneNumbers>" +
+                "      <home>5551234</home>" +
+                "      <mobile>5555678</mobile>" +
+                "      <work>5559991</work>" +
+                "    </phoneNumbers>" +
+                "  </entry>" +
                 "</feed>";
         Document input = parsing.xml().document(content);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -13,7 +13,7 @@ public class SimpleParsersTest {
 
     @BeforeClass
     public static void before(){
-        parsing = ParsingFactory.getInstance().get();
+        parsing = ParsingFactory.getInstance().create();
     }
 
     @Test

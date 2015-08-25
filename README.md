@@ -50,7 +50,7 @@ import com.nerdforge.unxml.factory.ParsingFactory;
 ...
 
 public class MyController {
-  public JsonNode getJsonFromXml(String inputXmlString) throws Exception {
+  public JsonNode getJsonFromXml(String inputXmlString) {
     Parsing parsing = ParsingFactory.getInstance().create();
     Document document = parsing.xml().document(inputXmlString);
     
@@ -105,7 +105,7 @@ public class MyController {
 public class MyController {
   @Inject private Parsing parsing; // (1)
 
-  public ArrayNode getArrayFromXml(String inputXmlString) throws Exception {
+  public ArrayNode getArrayFromXml(String inputXmlString) {
     Document document = parsing.xml().document(inputXmlString);
     
     ArrayParser parser = parsing.arr("/root/entry", parsing.arr("list/value")); // (2)
@@ -115,7 +115,7 @@ public class MyController {
 }
 ```
 
- 1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to install the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
+ 1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to `install` the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
  2. Creates an [ArrayParser](src/main/java/com/nerdforge/unxml/parsers/ArrayParser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
   * The first `arr()` will pick out each `entry` node *(in the xml-file)*.
   * The second `arr()` will pick out each `value` in the `list`.
@@ -150,24 +150,30 @@ You can of course combine [ObjectParsers](src/main/java/com/nerdforge/unxml/pars
 #### Creating the Parser
 
 ```java
-import static com.nerdforge.unxml.Parsers.*;
-...
-
 public class MyController {
-  public ArrayNode getUsersFromXml(String inputXmlString) throws Exception {
-    Document input = document(inputXmlString);
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  public ArrayNode getUsersFromXml(String inputXmlString) {
+    Parsing parsing = ParsingFactory.getInstance(namespaces()).create();
+    Document input = parsing.xml().document(inputXmlString);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    Parser dateParser = parsing.simple().dateParser(formatter); // (2a)
 
-    ArrayParser parser = arr("/root/user",
-      obj()
-        .attribute("id", "@id") // (1)
-        .attribute("name", "name")
-        .attribute("birthday" , "birthday", with(birthday -> LocalDate.parse(birthday, dateFormatter))) // (2)
-        .attribute("email", "email")
-        .attribute("phoneNumbers", arr("phoneNumbers/*", with(Integer::parseInt))) // (3)
+    ArrayParser parser = parsing.arr("/a:feed/a:entry",
+      parsing.obj()
+        .attribute("id", "@id", parsing.with(Integer::parseInt)) // (3)
+        .attribute("name", "a:name")
+        .attribute("birthday", "a:birthday", dateParser) // (2b)
+        .attribute("email", "app:email") // (4)
+        .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt))) // (5)
     );
     ArrayNode node = parser.apply(input);
     return node;
+  }
+  
+  private Map<String, String> namespaces(){
+    return Map<String, String> namespaces = new HashMap<String, String>(){{ // (1)
+        put("a", "http://www.w3.org/2005/Atom");
+        put("app", "http://www.w3.org/2007/app");
+    }};
   }
 }
 ```

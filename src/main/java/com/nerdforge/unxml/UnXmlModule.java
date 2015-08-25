@@ -8,7 +8,8 @@ import com.google.inject.PrivateModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import com.nerdforge.unxml.parsers.*;
-import com.nerdforge.unxml.parsers.factory.ArrayParserFactory;
+import com.nerdforge.unxml.factory.ArrayParserFactory;
+import com.nerdforge.unxml.xml.SimpleNamespaceContext;
 import com.nerdforge.unxml.xml.XmlUtil;
 import static org.apache.xerces.impl.Constants.*;
 
@@ -48,8 +49,8 @@ public class UnXmlModule extends PrivateModule {
         // bind document builder factory
         bind(DocumentBuilderFactory.class).toInstance(documentBuilderFactory());
 
-        bind(UnXml.class);
-        expose(UnXml.class);
+        bind(Parsing.class);
+        expose(Parsing.class);
 
         bind(XmlUtil.class);
         expose(XmlUtil.class);

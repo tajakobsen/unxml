@@ -1,13 +1,21 @@
 package com.nerdforge.unxml.parsers;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.nerdforge.unxml.Parsing;
+import com.nerdforge.unxml.factory.ParsingFactory;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
-
-import static com.nerdforge.unxml.Parsers.*;
 import static org.fest.assertions.Assertions.*;
 
 public class ArrayParserTest {
+    private static Parsing parsing;
+
+    @BeforeClass
+    public static void before(){
+        parsing = ParsingFactory.getInstance().get();
+    }
+
     @Test
     public void testParseArray() throws Exception {
         String content = "<root>" +
@@ -19,10 +27,9 @@ public class ArrayParserTest {
                     "</list>" +
                 "</entry>" +
                 "</root>";
-        Document input = document(content);
+        Document input = parsing.xml().document(content);
 
-
-        ArrayParser parser = arr("/root/entry", arr("list/value"));
+        ArrayParser parser = parsing.arr("/root/entry", parsing.arr("list/value"));
 
         ArrayNode node = parser.apply(input);
         assertThat(node.size()).isEqualTo(2);
@@ -41,13 +48,12 @@ public class ArrayParserTest {
                         "<title>mytitle2</title>" +
                     "</entry>" +
                 "</root>";
-        Document input = document(content);
+        Document input = parsing.xml().document(content);
 
-        ArrayParser parser = arr("//entry", obj()
-                .attribute("id", "id", with(Integer::parseInt))
+        ArrayParser parser = parsing.arr("//entry", parsing.obj()
+                .attribute("id", "id", parsing.with(Integer::parseInt))
                 .attribute("title", "title")
                 .build());
-
 
         ArrayNode node = parser.apply(input);
 

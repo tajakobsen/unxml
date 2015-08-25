@@ -1,45 +1,28 @@
 package com.nerdforge.unxml;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.nerdforge.unxml.parsers.ArrayParser;
-import com.nerdforge.unxml.parsers.factory.ArrayParserFactory;
+import com.nerdforge.unxml.factory.ArrayParserFactory;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 import com.nerdforge.unxml.parsers.builders.ObjectParserBuilder;
+import com.nerdforge.unxml.xml.XmlUtil;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Map;
 import java.util.function.Function;
 
-public class UnXml {
+public class Parsing {
     private final ArrayParserFactory arrayParserFactory;
     private final SimpleParsers simpleParsers;
     private Provider<ObjectParserBuilder> objectParserBuilder;
+    private final XmlUtil xmlUtil;
 
     @Inject
-    public UnXml(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectParserBuilder> objectParserBuilder){
+    public Parsing(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectParserBuilder> objectParserBuilder, XmlUtil xmlUtil){
         this.arrayParserFactory = arrayParserFactory;
         this.simpleParsers = simpleParsers;
         this.objectParserBuilder = objectParserBuilder;
-    }
-
-    /**
-     * Initiates a Guice injector, and returns an instance of UnXml
-     * @return an instance of UnXml
-     */
-    public static UnXml getInstance(){
-        return getInstance(null);
-    }
-
-    /**
-     * Initiates a Guice injector, and returns an instance of UnXml
-     * @param namespaces A map containing namespaces in the xml
-     * @return an instance of UnXml
-     */
-    public static UnXml getInstance(Map<String, String> namespaces){
-        return injector(namespaces).getInstance(UnXml.class);
+        this.xmlUtil = xmlUtil;
     }
 
     /**
@@ -102,8 +85,19 @@ public class UnXml {
         return simpleParsers.textParser(transformer);
     }
 
+    /**
+     * Returns some XML utility methods
+     * @return An instance of XmlUtil
+     */
+    public XmlUtil xml(){
+        return xmlUtil;
+    }
 
-    private static Injector injector(Map<String, String> namespaces){
-        return Guice.createInjector(new UnXmlModule(namespaces));
+    /**
+     * Returns an object with some simple preconfigured parsers
+     * @return An instance of SimpleParsers
+     */
+    public SimpleParsers simple(){
+        return simpleParsers;
     }
 }

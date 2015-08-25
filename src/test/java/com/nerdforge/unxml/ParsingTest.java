@@ -1,31 +1,32 @@
 package com.nerdforge.unxml;
 
-import static com.nerdforge.unxml.Parsers.*;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.nerdforge.unxml.factory.ParsingFactory;
 import com.nerdforge.unxml.parsers.ArrayParser;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.nerdforge.unxml.Parsers.with;
 import static org.fest.assertions.Assertions.assertThat;
 
-public class ParsersTest {
-    Map<String, String> NAMESPACES = Collections.unmodifiableMap(new HashMap<String, String>() {{
-        put("a", "http://www.w3.org/2005/Atom");
-        put("app", "http://www.w3.org/2007/app");
-    }});
+public class ParsingTest {
+    private static Parsing parsing;
+
+    @BeforeClass
+    public static void before(){
+        Map<String, String> namespaces = new HashMap<String, String>(){{
+            put("a", "http://www.w3.org/2005/Atom");
+            put("app", "http://www.w3.org/2007/app");
+        }};
+        parsing = ParsingFactory.getInstance(namespaces).get();
+    }
 
     @Test
     public void testParseObject() throws Exception {
-        Parsers.injector(NAMESPACES);
-
         String content = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">\n" +
                 "  <entry id=\"1\">\n" +
                 "    <name>Homer Simpson</name>\n" +
@@ -38,16 +39,16 @@ public class ParsersTest {
                 "    </phoneNumbers>\n" +
                 "  </entry>\n" +
                 "</feed>";
-        Document input = document(content);
+        Document input = parsing.xml().document(content);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        ArrayParser parser = arr("/a:feed/a:entry",
-            obj()
-                .attribute("id", "@id", with(Integer::parseInt))
-                .attribute("name", "a:name")
-                .attribute("birthday", "a:birthday", with(birthday -> LocalDate.parse(birthday, dateFormatter)))
-                .attribute("email", "a:email")
-                .attribute("phoneNumbers", arr("a:phoneNumbers/*", with(Integer::parseInt)))
+        ArrayParser parser = parsing.arr("/a:feed/a:entry",
+                parsing.obj()
+                        .attribute("id", "@id", parsing.with(Integer::parseInt))
+                        .attribute("name", "a:name")
+                        .attribute("birthday", "a:birthday", parsing.with(birthday -> LocalDate.parse(birthday, dateFormatter)))
+                        .attribute("email", "a:email")
+                        .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt)))
         );
 
         ArrayNode node = parser.apply(input);

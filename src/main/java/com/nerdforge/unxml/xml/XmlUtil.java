@@ -27,7 +27,6 @@ import static java.util.stream.Collectors.toList;
 @Singleton
 public class XmlUtil {
     private static final Logger logger = LoggerFactory.getLogger("unXml");
-
     private final DocumentBuilderFactory factory;
     private XPathFactory xpathFactory = XPathFactory.newInstance();
     private NamespaceContext namespaceContext;
@@ -37,6 +36,7 @@ public class XmlUtil {
         this.factory = factory;
         this.namespaceContext = namespaceContext;
     }
+
 
     public Document document(File file){
         try {

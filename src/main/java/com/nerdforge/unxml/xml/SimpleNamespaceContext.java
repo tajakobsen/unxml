@@ -1,4 +1,4 @@
-package com.nerdforge.unxml;
+package com.nerdforge.unxml.xml;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;

@@ -1,8 +1,10 @@
-package com.nerdforge.unxml;
+package com.nerdforge.unxml.xml;
 
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.nerdforge.unxml.xml.SimpleNamespaceContext;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static javax.xml.XMLConstants.*;

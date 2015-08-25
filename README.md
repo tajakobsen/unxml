@@ -133,12 +133,12 @@ You can of course combine [ObjectParsers](src/main/java/com/nerdforge/unxml/pars
 #### The input XML string
 
 ```xml
-<?xml version=\"1.0\"?>
-<feed xmlns=\"http://www.w3.org/2005/Atom\">
-  <entry id=\"1\">
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry id="1">
     <name>Homer Simpson</name>
     <birthday>1956-03-01</birthday>
-    <email xmlns=\"http://www.w3.org/2007/app\">chunkylover53@aol.com</email>
+    <email xmlns="http://www.w3.org/2007/app">chunkylover53@aol.com</email>
     <phoneNumbers>
       <home>5551234</home>
       <mobile>5555678</mobile>
@@ -158,13 +158,13 @@ public class MyController {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     Parser dateParser = parsing.simple().dateParser(formatter); // (2)
 
-    ArrayParser parser = parsing.arr("/a:feed/a:entry",
+    ArrayParser parser = parsing.arr("/a:feed/a:entry", // (3)
       parsing.obj()
-        .attribute("id", "@id", parsing.with(Integer::parseInt)) // (3)
+        .attribute("id", "@id", parsing.with(Integer::parseInt)) // (4)
         .attribute("name", "a:name")
         .attribute("birthday", "a:birthday", dateParser)
-        .attribute("email", "app:email") // (4)
-        .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt))) // (5)
+        .attribute("email", "app:email") // (5)
+        .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt))) // (6)
     );
     ArrayNode node = parser.apply(input);
     return node;
@@ -181,9 +181,10 @@ public class MyController {
 
  1. Creates the instance of `Parsing`, but with XML-namespaces.
  2. Creates a `dateParser` that will parse dates with the format `yyyy-MM-dd`.
- 3. The xpath selects on an attribute in the xml
- 4. Use the preconfigured namespace `app` to select the email.
- 5. We do a xpath selection on a wildcard, to create an array. The `String` contents of the nodes are parsed into `Integers`.
+ 3. Uses the preconfigured namespace `a` to do selections.
+ 4. The xpath selects on an attribute in the xml
+ 5. Use the preconfigured namespace `app` to select the email.
+ 6. We do a xpath selection on a wildcard, to create an array. The `String` contents of the nodes are parsed into `Integers`.
 
 #### Return Json object
 

@@ -20,9 +20,12 @@ And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Docum
 Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [functional interface](https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html), it can be mapped directly, like this:
 
 ```java
+Parsing parsing = ParsingFactory.getInstance(namespaces).create();
 Parser parser = ... // se below for examples
-Optional<Document> document = Parsers.document(inputXmlString);
-Optional<JsonNode> result = document.map(parser); // look ma, no: document.map(parser::apply);
+Document document = parsing.xml().document(inputXmlString);
+
+// look ma, no: Optional.of(document).map(parser::apply);
+Optional<JsonNode> result = Optional.of(document).map(parser); 
 
 List<Document> documents = ...
 List<JsonNode> results = documents.stream().map(parser).collect(toList());
@@ -42,19 +45,20 @@ List<JsonNode> results = documents.stream().map(parser).collect(toList());
 #### Creating the Parser
 
 ```java
-import com.nerdforge.unxml.Parsers;
-import static com.nerdforge.unxml.Parsers.with;
+import com.nerdforge.unxml.Parsing;
+import com.nerdforge.unxml.factory.ParsingFactory;
 ...
 
 public class MyController {
   public JsonNode getJsonFromXml(String inputXmlString) throws Exception {
-    Document document = Parsers.document(inputXmlString);
+    Parsing parsing = ParsingFactory.getInstance().create();
+    Document document = parsing.xml().document(content);
     
-    Parser parser = Parsers.obj() // (1)
-      .attribute("id", "/root/id", with(Integer::parseInt)) // (2)
-      .attribute("title", "//title") // (3) 
+    Parser parser = parsing.obj() // (1)
+      .attribute("id", "/root/id", parsing.with(Integer::parseInt)) // (2)
+      .attribute("title", "//title") // (3)
       .build(); // (4)
-    
+
     JsonNode node = parser.apply(document); // (5)
     return node;
   }

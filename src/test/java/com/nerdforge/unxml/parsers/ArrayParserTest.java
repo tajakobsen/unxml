@@ -17,7 +17,7 @@ public class ArrayParserTest {
     }
 
     @Test
-    public void testParseArray() throws Exception {
+    public void testParseArray() {
         String content = "<root>" +
                 "<entry></entry>" +
                 "<entry>" +
@@ -38,7 +38,7 @@ public class ArrayParserTest {
     }
 
     @Test
-    public void testParseArrayWithObjects() throws Exception {
+    public void testParseArrayWithObjects() {
         String content = "<root>" +
                     "<entry>" +
                         "<id>1</id>" +

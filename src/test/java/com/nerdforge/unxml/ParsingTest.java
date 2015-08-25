@@ -3,11 +3,10 @@ package com.nerdforge.unxml;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.nerdforge.unxml.factory.ParsingFactory;
 import com.nerdforge.unxml.parsers.ArrayParser;
+import com.nerdforge.unxml.parsers.Parser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
-
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,7 @@ public class ParsingTest {
 
     @BeforeClass
     public static void before(){
-        Map<String, String> namespaces = new HashMap<String, String>(){{
+        Map<String, String> namespaces = new HashMap<String, String>(){{ // (1)
             put("a", "http://www.w3.org/2005/Atom");
             put("app", "http://www.w3.org/2007/app");
         }};
@@ -26,12 +25,12 @@ public class ParsingTest {
     }
 
     @Test
-    public void testParseObject() throws Exception {
-        String content = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">" +
+    public void testParseObject() {
+        String inputXmlString = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">" +
                 "  <entry id=\"1\">" +
                 "    <name>Homer Simpson</name>" +
                 "    <birthday>1956-03-01</birthday>" +
-                "    <email>chunkylover53@aol.com</email>" +
+                "    <email xmlns=\"http://www.w3.org/2007/app\">chunkylover53@aol.com</email>" +
                 "    <phoneNumbers>" +
                 "      <home>5551234</home>" +
                 "      <mobile>5555678</mobile>" +
@@ -39,20 +38,21 @@ public class ParsingTest {
                 "    </phoneNumbers>" +
                 "  </entry>" +
                 "</feed>";
-        Document input = parsing.xml().document(content);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Document input = parsing.xml().document(inputXmlString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Parser dateParser = parsing.simple().dateParser(formatter); // (2a)
 
         ArrayParser parser = parsing.arr("/a:feed/a:entry",
                 parsing.obj()
-                        .attribute("id", "@id", parsing.with(Integer::parseInt))
+                        .attribute("id", "@id", parsing.with(Integer::parseInt)) // (3)
                         .attribute("name", "a:name")
-                        .attribute("birthday", "a:birthday", parsing.with(birthday -> LocalDate.parse(birthday, dateFormatter)))
-                        .attribute("email", "a:email")
-                        .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt)))
+                        .attribute("birthday", "a:birthday", dateParser) // (2b)
+                        .attribute("email", "app:email") // (4)
+                        .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt))) // (5)
         );
 
         ArrayNode node = parser.apply(input);
-        //assertThat(node.at("/0/id").asInt()).isEqualTo(1);
+        assertThat(node.at("/0/id").asInt()).isEqualTo(1);
         assertThat(node.at("/0/name").asText()).isEqualTo("Homer Simpson");
         assertThat(node.at("/0/birthday/0").asInt()).isEqualTo(1956);
         assertThat(node.at("/0/birthday/1").asInt()).isEqualTo(3);

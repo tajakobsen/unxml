@@ -18,14 +18,14 @@ public class ObjectParserTest {
     }
 
     @Test
-    public void testParseObject() throws Exception {
-        String content = "<root><id>1</id><title>mytitle</title></root>";
-        Document input = parsing.xml().document(content);
+    public void testParseObject() {
+        String inputXmlString = "<root><id>1</id><title>mytitle</title></root>";
+        Document input = parsing.xml().document(inputXmlString);
 
         Parser parser = parsing.obj()
             .attribute("id", "/root/id", parsing.with(Integer::parseInt))
             .attribute("title", "//title")
-            .build();
+                .build();
 
         JsonNode node = parser.apply(input);
 
@@ -35,9 +35,9 @@ public class ObjectParserTest {
     }
 
     @Test
-    public void testParseSubObject() throws Exception {
-        String content = "<root><entry><title>parent</title><sub><id>1</id><title>mytitle</title></sub></entry></root>";
-        Document input = parsing.xml().document(content);
+    public void testParseSubObject() {
+        String inputXmlString = "<root><entry><title>parent</title><sub><id>1</id><title>mytitle</title></sub></entry></root>";
+        Document input = parsing.xml().document(inputXmlString);
 
         Parser parser = parsing.obj()
             .attribute("title", "//entry/title")
@@ -45,7 +45,7 @@ public class ObjectParserTest {
                 parsing.obj()
                     .attribute("id", "id")
                     .attribute("title", "title"))
-            .build();
+                .build();
 
         JsonNode node = parser.apply(input);
 
@@ -55,7 +55,7 @@ public class ObjectParserTest {
     }
 
     @Test
-    public void testParseSubObjectNoExist() throws Exception {
+    public void testParseSubObjectNoExist() {
         Document input = parsing.xml().document("<root><entry></entry></root>"); // no <sub></sub>
 
         Parser parser = parsing.obj()
@@ -64,7 +64,7 @@ public class ObjectParserTest {
                 parsing.obj()
                     .attribute("id", "id")
                     .attribute("title", "title"))
-            .build();
+                .build();
         JsonNode node = parser.apply(input);
         assertThat(node.path("sub").isNull()).isEqualTo(Boolean.TRUE);
     }

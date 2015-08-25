@@ -52,7 +52,7 @@ import com.nerdforge.unxml.factory.ParsingFactory;
 public class MyController {
   public JsonNode getJsonFromXml(String inputXmlString) throws Exception {
     Parsing parsing = ParsingFactory.getInstance().create();
-    Document document = parsing.xml().document(content);
+    Document document = parsing.xml().document(inputXmlString);
     
     Parser parser = parsing.obj() // (1)
       .attribute("id", "/root/id", parsing.with(Integer::parseInt)) // (2)
@@ -102,21 +102,20 @@ public class MyController {
 #### Creating the Parser
 
 ```java
-import static com.nerdforge.unxml.Parsers.*; // (1)
-...
-
 public class MyController {
+  @Inject private Parsing parsing; // (1)
+
   public ArrayNode getArrayFromXml(String inputXmlString) throws Exception {
-    Document document = document(inputXmlString);
+    Document document = parsing.xml().document(inputXmlString);
     
-    ArrayParser parser = arr("/root/entry", arr("list/value")); // (2)
+    ArrayParser parser = parsing.arr("/root/entry", parsing.arr("list/value")); // (2)
     ArrayNode node = parser.apply(document);
     return node;
   }
 }
 ```
 
- 1. Using a `static import` on [Parsers](src/main/java/com/nerdforge/unxml/Parsers.java), enables `obj()` and `arr()` to be called directly, with a cleaner and more readable syntax.
+ 1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to install the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
  2. Creates an [ArrayParser](src/main/java/com/nerdforge/unxml/parsers/ArrayParser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
   * The first `arr()` will pick out each `entry` node *(in the xml-file)*.
   * The second `arr()` will pick out each `value` in the `list`.

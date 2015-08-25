@@ -37,7 +37,6 @@ public class XmlUtil {
         this.namespaceContext = namespaceContext;
     }
 
-
     public Document document(File file){
         try {
             return factory.newDocumentBuilder().parse(file);

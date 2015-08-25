@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.google.inject.PrivateModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
+import com.nerdforge.unxml.factory.ObjectParserFactory;
 import com.nerdforge.unxml.parsers.*;
 import com.nerdforge.unxml.factory.ArrayParserFactory;
 import com.nerdforge.unxml.xml.SimpleNamespaceContext;
@@ -31,10 +32,16 @@ public class UnXmlModule extends PrivateModule {
 
     @Override
     protected void configure() {
-        // Generate ArrayParserFactory
+        // Generate Factories
+        install(new FactoryModuleBuilder()
+                .implement(ObjectParser.class, ObjectParser.class)
+                .build(ObjectParserFactory.class));
+
         install(new FactoryModuleBuilder()
                 .implement(ArrayParser.class, ArrayParser.class)
                 .build(ArrayParserFactory.class));
+
+
 
         // JSON Mapper
         ObjectMapper mapper = new ObjectMapper();

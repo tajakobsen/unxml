@@ -2,6 +2,7 @@ package com.nerdforge.unxml.parsers.builders;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.nerdforge.unxml.factory.ObjectParserFactory;
 import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 import com.nerdforge.unxml.parsers.Parser;
@@ -12,10 +13,12 @@ public class ObjectParserBuilder {
     private Map<String, Parser> attributes = Maps.newHashMap();
     private Optional<String> xpath = Optional.empty();
     private SimpleParsers simpleParsers;
+    private ObjectParserFactory factory;
 
     @Inject
-    public ObjectParserBuilder(SimpleParsers simpleParsers) {
+    public ObjectParserBuilder(SimpleParsers simpleParsers, ObjectParserFactory factory) {
         this.simpleParsers = simpleParsers;
+        this.factory = factory;
     }
 
     /**
@@ -78,7 +81,7 @@ public class ObjectParserBuilder {
      * @return An ObjectParser
      */
     public ObjectParser build(){
-        return new ObjectParser(xpath.map(this::wrapAttributes).orElse(attributes));
+        return factory.create(xpath.map(this::wrapAttributes).orElse(attributes));
     }
 
     private Map<String, Parser> wrapAttributes(String path){

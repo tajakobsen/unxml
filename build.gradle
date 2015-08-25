@@ -6,7 +6,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "unxml"
-group   = 'com.nerdforge.unxml'
+group   = 'com.nerdforge'
 version = '0.6'
 
 repositories {

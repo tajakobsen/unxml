@@ -2,6 +2,23 @@
 
 Java 8 Library for mapping XPaths to JSON-attributes.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
+
+Latest release
+--------------
+
+The most recent release is unXml 0.6, released August 25, 2015.
+
+To add a dependency on unXml using Maven, use the following:
+
+```xml
+<dependency>
+  <groupId>com.nerdforge</groupId>
+  <artifactId>unxml</artifactId>
+  <version>0.6</version>
+</dependency>
+```
+
 ## Parser
 
 An `Object` that implements the [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)-interface can do the following transformation:

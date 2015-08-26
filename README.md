@@ -31,15 +31,14 @@ And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Docum
 
 ## Using Parsing to create a Parser
 
-You need an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) to create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java).
+To create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) you first need an instance of  [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
 
 ```java
 Parsing parsing = ParsingFactory.getInstance().create();
-String myRootXpath = "//root";
 
 // create parser that will output a Json ObjectNode
 Parser parser = parsing.obj().attribute("id", "@id").build();
-Parser parser2 = parsing.obj(myRootXpath).attribute(...).build();
+Parser parser2 = parsing.obj("//my-root").attribute(...).build();
 
 // create parser that will output a Json ArrayNode
 Parser parser3 = parsing.arr(...);

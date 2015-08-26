@@ -37,11 +37,11 @@ To create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) you 
 Parsing parsing = ParsingFactory.getInstance().create();
 
 // create parser that will output a Json ObjectNode
-Parser parser = parsing.obj().attribute("id", "@id").build();
-Parser parser2 = parsing.obj("//my-root").attribute(...).build();
+Parser parser = parsing.obj().attribute(...).build();
+Parser parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
 
 // create parser that will output a Json ArrayNode
-Parser parser3 = parsing.arr(...);
+Parser parser3 = parsing.arr(parsing.obj().build());
 ```
 
 ## Example - Parsing an object

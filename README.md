@@ -1,8 +1,8 @@
 # unXml
 
-Java 8 Library for mapping XPaths to JSON-attributes.
-
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
+
+Java 8 Library for mapping XPaths to JSON-attributes.
 
 ## Latest release
 

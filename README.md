@@ -20,16 +20,30 @@ To add a dependency on unXml using Maven, use the following:
 
 ## Parser
 
-An `Object` that implements the [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)-interface can do the following transformation:
+A [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do the following transformation:
 
 [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [JsonNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html)
 ```java
-public interface Parser {
-  public JsonNode apply(Node node)
-}
+public interface Parser { JsonNode apply(Node node); }
 ```
 
 And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html), `Document` can also be used as input.
+
+## Using Parsing to create a Parser
+
+You need an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) to create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java).
+
+```java
+Parsing parsing = ParsingFactory.getInstance().create();
+String myRootXpath = "//root";
+
+// create parser that will output a Json ObjectNode
+Parser parser = parsing.obj().attribute("id", "@id").build();
+Parser parser2 = parsing.obj(myRootXpath).attribute(...).build();
+
+// create parser that will output a Json ArrayNode
+Parser parser3 = parsing.arr(...);
+```
 
 ## Example - Parsing an object
 

@@ -2,7 +2,7 @@
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
 
-Java 8 Library for mapping XPaths to JSON-attributes.
+Java 8 Library for mapping XPaths to JSON-attributes. Maps xml node-objects from the [org.w3c.dom](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/package-summary.html)-package, to Jackson [JsonNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html)-objects..
 
 ## Latest release
 
@@ -38,7 +38,7 @@ Parsing parsing = ParsingFactory.getInstance().create();
 
 // create parser that will output a Jackson ObjectNode
 Parser parser = parsing.obj().attribute(...).build();
-Parser parser2 = parsing.obj("//my-root").build();
+Parser parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
 
 // create parser that will output a Jackson ArrayNode
 Parser parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));

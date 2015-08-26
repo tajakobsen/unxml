@@ -37,7 +37,7 @@ To create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) you 
 Parsing parsing = ParsingFactory.getInstance().create();
 
 // create parser that will output a Jackson ObjectNode
-Parser parser = parsing.obj().attribute(...).build();
+Parser parser = parsing.obj().attribute("resultKey", "//my-xpath").build();
 Parser parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
 
 // create parser that will output a Jackson ArrayNode

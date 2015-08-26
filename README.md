@@ -4,8 +4,7 @@ Java 8 Library for mapping XPaths to JSON-attributes.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
 
-Latest release
---------------
+## Latest release
 
 The most recent release is unXml 0.6, released August 25, 2015.
 
@@ -31,28 +30,6 @@ public interface Parser {
 ```
 
 And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html), `Document` can also be used as input.
-
-## Functional interface
-
-Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [functional interface](https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html), it can be mapped directly, like this:
-
-```java
-Parsing parsing = ParsingFactory.getInstance(namespaces).create(); // (1)
-Parser parser = ... // se below for examples
-Document document = parsing.xml().document(inputXmlString); // (2)
-
-// Apply to an Optional
-Optional<JsonNode> result = Optional.of(document).map(parser); // (3)
-
-// Apply to a Stream
-List<Document> documents = ...
-List<JsonNode> results = documents.stream().map(parser).collect(toList()); // (4)
-```
-
- 1. Uses the [ParsingFactory](src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java) to get an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
- 2. Parsing also gives access to an XML-utility object by using the `xml()`-method.
- 3. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
- 4. Shorthand for `documents.stream().map(parser::apply).collect(toList())`
 
 ## Example - Parsing an object
 
@@ -221,3 +198,25 @@ public class MyController {
 ```
 
  1. The Jackson library will map a Java [LocalDate](https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html) as a JavaScript `Array` of `Numbers`. See the [documentation](https://github.com/FasterXML/jackson-datatype-jsr310).
+ 
+## Functional interface
+
+Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [functional interface](https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html), it can be mapped directly, like this:
+
+```java
+Parsing parsing = ParsingFactory.getInstance(namespaces).create(); // (1)
+Parser parser = ... // se below for examples
+Document document = parsing.xml().document(inputXmlString); // (2)
+
+// Apply to an Optional
+Optional<JsonNode> result = Optional.of(document).map(parser); // (3)
+
+// Apply to a Stream
+List<Document> documents = ...
+List<JsonNode> results = documents.stream().map(parser).collect(toList()); // (4)
+```
+
+ 1. Uses the [ParsingFactory](src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java) to get an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
+ 2. Parsing also gives access to an XML-utility object by using the `xml()`-method.
+ 3. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
+ 4. Shorthand for `documents.stream().map(parser::apply).collect(toList())`

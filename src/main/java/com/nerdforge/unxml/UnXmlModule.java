@@ -41,8 +41,6 @@ public class UnXmlModule extends PrivateModule {
                 .implement(ArrayParser.class, ArrayParser.class)
                 .build(ArrayParserFactory.class));
 
-
-
         // JSON Mapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Jdk8Module());

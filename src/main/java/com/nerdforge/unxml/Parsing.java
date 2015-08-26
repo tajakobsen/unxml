@@ -1,5 +1,6 @@
 package com.nerdforge.unxml;
 
+import com.nerdforge.unxml.json.JsonUtil;
 import com.nerdforge.unxml.parsers.ArrayParser;
 import com.nerdforge.unxml.factory.ArrayParserFactory;
 import com.nerdforge.unxml.parsers.Parser;
@@ -16,13 +17,15 @@ public class Parsing {
     private final SimpleParsers simpleParsers;
     private Provider<ObjectParserBuilder> objectParserBuilder;
     private final XmlUtil xmlUtil;
+    private final JsonUtil jsonUtil;
 
     @Inject
-    public Parsing(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectParserBuilder> objectParserBuilder, XmlUtil xmlUtil){
+    public Parsing(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectParserBuilder> objectParserBuilder, XmlUtil xmlUtil, JsonUtil jsonUtil){
         this.arrayParserFactory = arrayParserFactory;
         this.simpleParsers = simpleParsers;
         this.objectParserBuilder = objectParserBuilder;
         this.xmlUtil = xmlUtil;
+        this.jsonUtil = jsonUtil;
     }
 
     /**
@@ -70,7 +73,7 @@ public class Parsing {
      *                become children of the Array.
      * @return A new instance of ArrayParser
      */
-    public ArrayParser arr(String xpath, Parser parser){
+    public ArrayParser arr(String xpath, Parser<?> parser){
         return arrayParserFactory.create(xpath, parser);
     }
 

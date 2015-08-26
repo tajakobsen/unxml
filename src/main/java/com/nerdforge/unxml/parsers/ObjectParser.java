@@ -8,11 +8,11 @@ import org.w3c.dom.Node;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class ObjectParser implements Parser {
-    private final Map<String, Parser> attributes;
+public class ObjectParser implements Parser<ObjectNode> {
+    private final Map<String, Parser<?>> attributes;
 
     @Inject
-    public ObjectParser(@Assisted Map<String, Parser> attributes) {
+    public ObjectParser(@Assisted Map<String, Parser<?>> attributes) {
         this.attributes = attributes;
     }
 

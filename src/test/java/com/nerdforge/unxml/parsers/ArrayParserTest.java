@@ -6,6 +6,12 @@ import com.nerdforge.unxml.factory.ParsingFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
 import static org.fest.assertions.Assertions.*;
 
 public class ArrayParserTest {
@@ -60,5 +66,17 @@ public class ArrayParserTest {
         assertThat(node.size()).isEqualTo(2);
         assertThat(node.at("/0/id").asInt()).isEqualTo(1);
         assertThat(node.at("/0/title").asText()).isEqualTo("mytitle");
+
+        // Make an object
+        List<Article> articles = parser.as(Article.class).apply(input);
+
+        assertThat(articles).hasSize(2);
+        assertThat(articles.get(0).id).isEqualTo(1);
+        assertThat(articles.get(0).title).isEqualTo("mytitle");
+    }
+
+    public static class Article {
+        public Integer id;
+        public String title;
     }
 }

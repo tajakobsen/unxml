@@ -1,24 +1,31 @@
 package com.nerdforge.unxml.parsers.builders;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.nerdforge.unxml.factory.ObjectParserFactory;
+import com.nerdforge.unxml.json.JsonUtil;
+import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
-import com.nerdforge.unxml.parsers.Parser;
+import org.w3c.dom.Node;
+
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class ObjectParserBuilder {
-    private Map<String, Parser> attributes = Maps.newHashMap();
+    private Map<String, Parser<?>> attributes = Maps.newHashMap();
     private Optional<String> xpath = Optional.empty();
     private SimpleParsers simpleParsers;
     private ObjectParserFactory factory;
+    private JsonUtil jsonUtil;
 
     @Inject
-    public ObjectParserBuilder(SimpleParsers simpleParsers, ObjectParserFactory factory) {
+    public ObjectParserBuilder(SimpleParsers simpleParsers, ObjectParserFactory factory, JsonUtil jsonUtil) {
         this.simpleParsers = simpleParsers;
         this.factory = factory;
+        this.jsonUtil = jsonUtil;
     }
 
     /**
@@ -47,7 +54,7 @@ public class ObjectParserBuilder {
      * @param parser A Parser that can parse child nodes of the node passed to *this* parser.
      * @return The builder itself, so commands can be chained
      */
-    public ObjectParserBuilder attribute(String key, Parser parser) {
+    public ObjectParserBuilder attribute(String key, Parser<?> parser) {
         attributes.put(key, parser);
         return this;
     }
@@ -72,8 +79,9 @@ public class ObjectParserBuilder {
      * @param parser A Parser that can parse child nodes of the node passed to *this* parser.
      * @return The builder itself, so commands can be chained
      */
-    public ObjectParserBuilder attribute(String key, String xpath, Parser parser){
-        return attribute(key, node -> simpleParsers.elementParser(xpath, parser).apply(node));
+    public ObjectParserBuilder attribute(String key, String xpath, Parser<?> parser){
+        Parser<JsonNode> elementParser = simpleParsers.elementParser(xpath, parser);
+        return attribute(key, elementParser::apply);
     }
 
     /**
@@ -84,7 +92,15 @@ public class ObjectParserBuilder {
         return factory.create(xpath.map(this::wrapAttributes).orElse(attributes));
     }
 
-    private Map<String, Parser> wrapAttributes(String path){
+    /**
+     * Returns some Json utility methods
+     * @return An instance of JsonUtil
+     */
+    public <A> Function<Node, A> as(Class<A> valueType){
+        return build().andThen(jsonUtil.as(valueType));
+    }
+
+    private Map<String, Parser<?>> wrapAttributes(String path){
         return Maps.transformValues(attributes, parser -> simpleParsers.elementParser(path, parser));
     }
 }

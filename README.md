@@ -38,10 +38,10 @@ Parsing parsing = ParsingFactory.getInstance().create();
 
 // create parser that will output a Json ObjectNode
 Parser parser = parsing.obj().attribute(...).build();
-Parser parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
+Parser parser2 = parsing.obj("//my-root").build();
 
 // create parser that will output a Json ArrayNode
-Parser parser3 = parsing.arr(parsing.obj().build());
+Parser parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));
 ```
 
 ## Example - Parsing an object

@@ -20,22 +20,12 @@ To add a dependency on unXml using Maven, use the following:
 
 ## Parser
 
-A [Parser<ObjectNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do the following transformation:
+A [Parser&lt;ObjectNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.java) and a [Parser&lt;ArrayNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do the following transformations:
 
 [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html)
 
-```java
-public interface Parser<ObjectNode> { ObjectNode apply(Node node); }
-```
-
-
-And a [Parser<ArrayNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do:
-
 [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ArrayNode.html)
 
-```java
-public interface Parser<ArrayNode> { ArrayNode apply(Node node); }
-```
 
 And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html), `Document` can also be used as input.
 
@@ -158,7 +148,7 @@ public class MyController {
 ```
 
  1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to `install` the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
- 2. Creates an [Parser<ArrayNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
+ 2. Creates a [Parser&lt;ArrayNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
   * The first `arr()` will pick out each `entry` node *(in the xml-file)*.
   * The second `arr()` will pick out each `value` in the `list`.
 

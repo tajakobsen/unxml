@@ -44,7 +44,7 @@ Parser<ObjectNode> parser2 = parsing.obj("//my-root").attribute("id", "@id").bui
 Parser<ArrayNode> parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));
 ```
 
-## Parsing to an instance or List
+## Parsing to an Object or List
 
 By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectParserBuilder.java) or [ArrayParser](src/main/java/com/nerdforge/unxml/parsers/ArrayParser.java), you can have Jackson instansiate an object or a `List` as part of the parsing process.
 

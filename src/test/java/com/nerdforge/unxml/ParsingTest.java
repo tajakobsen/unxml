@@ -49,7 +49,7 @@ public class ParsingTest {
                         .attribute("birthday", "a:birthday", dateParser) // (2b)
                         .attribute("email", "app:email") // (4)
                         .attribute("phoneNumbers", parsing.arr("a:phoneNumbers/*", parsing.with(Integer::parseInt))) // (5)
-        );
+        ).build();
 
         ArrayNode node = parser.apply(input);
         assertThat(node.at("/0/id").asInt()).isEqualTo(1);

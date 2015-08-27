@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.nerdforge.unxml.factory.ObjectParserFactory;
+import com.nerdforge.unxml.factory.ObjectNodeParserFactory;
 import com.nerdforge.unxml.json.JsonUtil;
 import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.Parser;
@@ -13,15 +13,15 @@ import com.nerdforge.unxml.parsers.SimpleParsers;
 import java.util.Map;
 import java.util.Optional;
 
-public class ObjectNodeParserBuilder {
+public class ObjectNodeParserBuilder implements ParserBuilder<ObjectNode> {
     private Map<String, Parser<?>> attributes = Maps.newHashMap();
     private Optional<String> xpath = Optional.empty();
     private SimpleParsers simpleParsers;
-    private ObjectParserFactory factory;
+    private ObjectNodeParserFactory factory;
     private JsonUtil jsonUtil;
 
     @Inject
-    public ObjectNodeParserBuilder(SimpleParsers simpleParsers, ObjectParserFactory factory, JsonUtil jsonUtil) {
+    public ObjectNodeParserBuilder(SimpleParsers simpleParsers, ObjectNodeParserFactory factory, JsonUtil jsonUtil) {
         this.simpleParsers = simpleParsers;
         this.factory = factory;
         this.jsonUtil = jsonUtil;
@@ -62,11 +62,22 @@ public class ObjectNodeParserBuilder {
      * Specify an attribute by key, and a ObjectNodeParserBuilder, that can read a child node, of the
      * one passed to this Parser.
      * @param key The key in the resulting ObjectNode
+     * @param builder A builder that will create a Parser that can read the child object
+     * @return The builder itself, so commands can be chained
+     */
+    public ObjectNodeParserBuilder attribute(String key, ParserBuilder builder){
+        return attribute(key, builder.build());
+    }
+
+    /**
+     * Specify an attribute by key, and a ObjectNodeParserBuilder, that can read a child node, of the
+     * one passed to this Parser.
+     * @param key The key in the resulting ObjectNode
      * @param xpath The xpath to a Node that will be passed to the child object
      * @param builder A builder that will create a Parser that can read the child object
      * @return The builder itself, so commands can be chained
      */
-    public ObjectNodeParserBuilder attribute(String key, String xpath, ObjectNodeParserBuilder builder){
+    public ObjectNodeParserBuilder attribute(String key, String xpath, ParserBuilder builder){
         return attribute(key, xpath, builder.build());
     }
 
@@ -87,6 +98,7 @@ public class ObjectNodeParserBuilder {
      * Builds the ObjectNodeParser with the attributes specified.
      * @return An ObjectNodeParser
      */
+    @Override
     public Parser<ObjectNode> build(){
         return factory.create(xpath.map(this::wrapAttributes).orElse(attributes));
     }

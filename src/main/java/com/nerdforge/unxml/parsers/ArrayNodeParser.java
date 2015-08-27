@@ -40,16 +40,6 @@ public class ArrayNodeParser implements Parser<ArrayNode> {
                 .collect(toArrayNode());
     }
 
-    /**
-     * Returns the parsed result as a List of Objects of class A
-     * @param valueType  The type of class that should be instansiated in the list
-     * @param <A> The Class the ListParser will return a list of.
-     * @return Result as a List of Objects of class A
-     */
-    public <A> ObjectParser<List<A>> as(Class<A> valueType){
-        return this.<List<A>>andThen(jsonUtil.asList(valueType))::apply;
-    }
-
     private Collector<JsonNode, ArrayNode, ArrayNode> toArrayNode(){
         return Collector.of(JsonNodeFactory.instance::arrayNode, ArrayNode::add, ArrayNode::addAll);
     }

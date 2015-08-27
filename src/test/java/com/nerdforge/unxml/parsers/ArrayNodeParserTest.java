@@ -3,6 +3,7 @@ package com.nerdforge.unxml.parsers;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.nerdforge.unxml.Parsing;
 import com.nerdforge.unxml.factory.ParsingFactory;
+import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -32,7 +33,7 @@ public class ArrayNodeParserTest {
                 "</root>";
         Document input = parsing.xml().document(content);
 
-        Parser<ArrayNode> parser = parsing.arr("/root/entry", parsing.arr("list/value"));
+        Parser<ArrayNode> parser = parsing.arr("/root/entry", parsing.arr("list/value")).build();
 
         ArrayNode node = parser.apply(input);
         assertThat(node.size()).isEqualTo(2);
@@ -53,11 +54,11 @@ public class ArrayNodeParserTest {
                 "</root>";
         Document input = parsing.xml().document(content);
 
-        Parser<ArrayNode> parser = parsing.arr("//entry", parsing.obj()
+        ArrayNodeParserBuilder builder = parsing.arr("//entry", parsing.obj()
                 .attribute("id", "id", parsing.with(Integer::parseInt))
-                .attribute("title", "title")
-                .build());
+                .attribute("title", "title"));
 
+        Parser<ArrayNode> parser = builder.build();
         ArrayNode node = parser.apply(input);
 
         assertThat(node.size()).isEqualTo(2);
@@ -65,7 +66,7 @@ public class ArrayNodeParserTest {
         assertThat(node.at("/0/title").asText()).isEqualTo("mytitle");
 
         // Make an object
-        ObjectParser<List<Article>> articleListParser = ((ArrayNodeParser) parser).as(Article.class);
+        ObjectParser<List<Article>> articleListParser = builder.as(Article.class);
         List<Article> articles = articleListParser.apply(input);
 
         assertThat(articles).hasSize(2);

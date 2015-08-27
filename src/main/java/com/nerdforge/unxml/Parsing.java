@@ -1,13 +1,12 @@
 package com.nerdforge.unxml;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.nerdforge.unxml.json.JsonUtil;
-import com.nerdforge.unxml.parsers.ArrayNodeParser;
-import com.nerdforge.unxml.factory.ArrayParserFactory;
+import com.nerdforge.unxml.factory.ArrayNodeParserBuilderFactory;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
+import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
 import com.nerdforge.unxml.parsers.builders.ObjectNodeParserBuilder;
+import com.nerdforge.unxml.parsers.builders.ParserBuilder;
 import com.nerdforge.unxml.xml.XmlUtil;
 
 import javax.inject.Inject;
@@ -15,14 +14,14 @@ import javax.inject.Provider;
 import java.util.function.Function;
 
 public class Parsing {
-    private final ArrayParserFactory arrayParserFactory;
+    private final ArrayNodeParserBuilderFactory arrayNodeFactory;
     private final SimpleParsers simpleParsers;
     private Provider<ObjectNodeParserBuilder> objectParserBuilder;
     private final XmlUtil xmlUtil;
 
     @Inject
-    public Parsing(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil){
-        this.arrayParserFactory = arrayParserFactory;
+    public Parsing(ArrayNodeParserBuilderFactory arrayNodeFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil){
+        this.arrayNodeFactory = arrayNodeFactory;
         this.simpleParsers = simpleParsers;
         this.objectParserBuilder = objectParserBuilder;
         this.xmlUtil = xmlUtil;
@@ -51,8 +50,8 @@ public class Parsing {
      * @param xpath The Xpath pointing a list of Nodes that will become the array
      * @return A new instance of ArrayNodeParser
      */
-    public Parser<ArrayNode> arr(String xpath){
-        return arrayParserFactory.create(xpath, simpleParsers.textParser());
+    public ArrayNodeParserBuilder arr(String xpath){
+        return arrayNodeFactory.create(xpath, simpleParsers.textParser());
     }
 
     /**
@@ -62,8 +61,8 @@ public class Parsing {
      *                become children of the Array.
      * @return A new instance of ArrayNodeParser
      */
-    public Parser<ArrayNode> arr(String xpath, ObjectNodeParserBuilder builder){
-        return arrayParserFactory.create(xpath, builder.build());
+    public ArrayNodeParserBuilder arr(String xpath, ParserBuilder builder){
+        return arrayNodeFactory.create(xpath, builder.build());
     }
 
     /**
@@ -73,8 +72,8 @@ public class Parsing {
      *                become children of the Array.
      * @return A new instance of ArrayNodeParser
      */
-    public Parser<ArrayNode> arr(String xpath, Parser<?> parser){
-        return arrayParserFactory.create(xpath, parser);
+    public ArrayNodeParserBuilder arr(String xpath, Parser<?> parser){
+        return arrayNodeFactory.create(xpath, parser);
     }
 
     /**

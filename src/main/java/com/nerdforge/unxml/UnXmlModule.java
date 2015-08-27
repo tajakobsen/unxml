@@ -7,9 +7,11 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.google.inject.PrivateModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import com.nerdforge.unxml.factory.ObjectParserFactory;
+import com.nerdforge.unxml.factory.ArrayNodeParserBuilderFactory;
+import com.nerdforge.unxml.factory.ObjectNodeParserFactory;
 import com.nerdforge.unxml.parsers.*;
-import com.nerdforge.unxml.factory.ArrayParserFactory;
+import com.nerdforge.unxml.factory.ArrayNodeParserFactory;
+import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
 import com.nerdforge.unxml.xml.SimpleNamespaceContext;
 import com.nerdforge.unxml.xml.XmlUtil;
 import static org.apache.xerces.impl.Constants.*;
@@ -35,11 +37,15 @@ public class UnXmlModule extends PrivateModule {
         // Generate Factories
         install(new FactoryModuleBuilder()
                 .implement(ObjectNodeParser.class, ObjectNodeParser.class)
-                .build(ObjectParserFactory.class));
+                .build(ObjectNodeParserFactory.class));
 
         install(new FactoryModuleBuilder()
                 .implement(ArrayNodeParser.class, ArrayNodeParser.class)
-                .build(ArrayParserFactory.class));
+                .build(ArrayNodeParserFactory.class));
+
+        install(new FactoryModuleBuilder()
+                .implement(ArrayNodeParserBuilder.class, ArrayNodeParserBuilder.class)
+                .build(ArrayNodeParserBuilderFactory.class));
 
         // JSON Mapper
         ObjectMapper mapper = new ObjectMapper();

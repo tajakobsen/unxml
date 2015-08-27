@@ -5,6 +5,6 @@ import com.nerdforge.unxml.parsers.Parser;
 
 import java.util.Map;
 
-public interface ObjectParserFactory {
+public interface ObjectNodeParserFactory {
     ObjectNodeParser create(Map<String, Parser<?>> attributes);
 }

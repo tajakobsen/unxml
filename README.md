@@ -6,7 +6,7 @@ Java 8 Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](ht
 
 ## Latest release
 
-The most recent release is unXml 0.6, released August 25, 2015.
+The most recent release is unXml 0.7, released August 27, 2015.
 
 To add a dependency on unXml using Maven, use the following:
 

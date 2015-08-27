@@ -6,7 +6,7 @@ Java 8 Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](ht
 
 ## Latest release
 
-The most recent release is unXml 0.6, released August 25, 2015.
+The most recent release is unXml 0.7, released August 27, 2015.
 
 To add a dependency on unXml using Maven, use the following:
 
@@ -14,7 +14,7 @@ To add a dependency on unXml using Maven, use the following:
 <dependency>
   <groupId>com.nerdforge</groupId>
   <artifactId>unxml</artifactId>
-  <version>0.6</version>
+  <version>0.7</version>
 </dependency>
 ```
 
@@ -42,6 +42,20 @@ Parser<ObjectNode> parser2 = parsing.obj("//my-root").attribute("id", "@id").bui
 
 // create parser that will output a Jackson ArrayNode
 Parser<ArrayNode> parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));
+```
+
+## Parsing to an instance or List
+
+By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectParserBuilder.java) or [ArrayParser](src/main/java/com/nerdforge/unxml/parsers/ArrayParser.java), you can have Jackson instansiate an object or a `List` as part of the parsing process.
+
+```java
+// create a parser that will output an Object instance
+InstanceParser<User> userParser = parsing.obj(...).attribute(...).as(User.class);
+User user = userParser.apply(xmlDocument);
+
+// create a parser that will output a List of objects
+ListParser<User> usersParser = parsing.arr(...).as(User.class);
+List<User> users = usersParser.apply(xmlDocument);
 ```
 
 ## Example - Parsing an object

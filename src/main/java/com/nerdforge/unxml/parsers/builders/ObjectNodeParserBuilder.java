@@ -6,8 +6,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.nerdforge.unxml.factory.ObjectParserFactory;
 import com.nerdforge.unxml.json.JsonUtil;
-import com.nerdforge.unxml.parsers.InstanceParser;
-import com.nerdforge.unxml.parsers.ObjectNodeParser;
+import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 
@@ -95,10 +94,10 @@ public class ObjectNodeParserBuilder {
     /**
      * Uses Jackson to instansiate the ObjectNode as a Java Object of type A.
      * @param valueType The type of class that should be instansiated
-     * @param <A> The Class the InstanceParser will return
+     * @param <A> The Class the ObjectParser will return
      * @return A parser that outputs an object of Class A.
      */
-    public <A> InstanceParser<A> as(Class<A> valueType) {
+    public <A> ObjectParser<A> as(Class<A> valueType) {
         return build().<A>andThen(jsonUtil.as(valueType))::apply;
     }
 

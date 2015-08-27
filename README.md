@@ -50,11 +50,11 @@ By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/un
 
 ```java
 // create a parser that will output an Object instance
-InstanceParser<User> userParser = parsing.obj(...).attribute(...).as(User.class);
+ObjectParser<User> userParser = parsing.obj(...).attribute(...).as(User.class);
 User user = userParser.apply(xmlDocument);
 
 // create a parser that will output a List of objects
-ListParser<User> usersParser = parsing.arr(...).as(User.class);
+ObjectParser<List<User>> usersParser = parsing.arr(...).as(User.class);
 List<User> users = usersParser.apply(xmlDocument);
 ```
 

@@ -42,6 +42,14 @@ Parser<ObjectNode> parser2 = parsing.obj("//my-root").attribute("id", "@id").bui
 
 // create parser that will output a Jackson ArrayNode
 Parser<ArrayNode> parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));
+
+// create a parser that will output an Object instance
+InstanceParser<User> userParser = parsing.obj(...).attribute(...).as(User.class);
+User user = userParser.apply(xmlDocument);
+
+// create a parser that will output a List of objects
+ListParser<User> usersParser = parsing.arr(...).as(User.class);
+List<User> users = usersParser.apply(xmlDocument);
 ```
 
 ## Example - Parsing an object

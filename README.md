@@ -14,7 +14,7 @@ To add a dependency on unXml using Maven, use the following:
 <dependency>
   <groupId>com.nerdforge</groupId>
   <artifactId>unxml</artifactId>
-  <version>0.6</version>
+  <version>0.7</version>
 </dependency>
 ```
 

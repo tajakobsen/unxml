@@ -1,14 +1,10 @@
 package com.nerdforge.unxml.parsers;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.nerdforge.unxml.Parsing;
 import com.nerdforge.unxml.factory.ParsingFactory;
-import com.nerdforge.unxml.parsers.builders.ObjectParserBuilder;
+import com.nerdforge.unxml.parsers.builders.ObjectNodeParserBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -18,7 +14,7 @@ import java.util.function.Function;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class ObjectParserTest {
+public class ObjectNodeParserTest {
     private static Parsing parsing;
 
     @BeforeClass
@@ -31,7 +27,7 @@ public class ObjectParserTest {
         String inputXmlString = "<root><id>1</id><title>mytitle</title></root>";
         Document input = parsing.xml().document(inputXmlString);
 
-        ObjectParserBuilder builder = parsing.obj()
+        ObjectNodeParserBuilder builder = parsing.obj()
             .attribute("id", "/root/id", parsing.with(Integer::parseInt))
             .attribute("title", "//title");
 
@@ -55,7 +51,7 @@ public class ObjectParserTest {
         String inputXmlString = "<root><entry><title>parent</title><sub><id>1</id><title>mytitle</title></sub></entry></root>";
         Document input = parsing.xml().document(inputXmlString);
 
-        ObjectParser parser = parsing.obj()
+        Parser<ObjectNode> parser = parsing.obj()
             .attribute("title", "//entry/title")
             .attribute("sub", "//entry/sub",
                 parsing.obj()
@@ -74,14 +70,14 @@ public class ObjectParserTest {
     public void testParseSubObjectNoExist() {
         Document input = parsing.xml().document("<root><entry></entry></root>"); // no <sub></sub>
 
-        ObjectParser parser = parsing.obj()
+        Parser<ObjectNode> parser = parsing.obj()
             .attribute("title", "//entry/title")
             .attribute("sub", "//entry/sub",
                 parsing.obj()
                     .attribute("id", "id")
                     .attribute("title", "title"))
                 .build();
-        JsonNode node = parser.apply(input);
+        ObjectNode node = parser.apply(input);
         assertThat(node.path("sub").isNull()).isEqualTo(Boolean.TRUE);
     }
 

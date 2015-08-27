@@ -1,11 +1,13 @@
 package com.nerdforge.unxml;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.nerdforge.unxml.json.JsonUtil;
-import com.nerdforge.unxml.parsers.ArrayParser;
+import com.nerdforge.unxml.parsers.ArrayNodeParser;
 import com.nerdforge.unxml.factory.ArrayParserFactory;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
-import com.nerdforge.unxml.parsers.builders.ObjectParserBuilder;
+import com.nerdforge.unxml.parsers.builders.ObjectNodeParserBuilder;
 import com.nerdforge.unxml.xml.XmlUtil;
 
 import javax.inject.Inject;
@@ -15,65 +17,63 @@ import java.util.function.Function;
 public class Parsing {
     private final ArrayParserFactory arrayParserFactory;
     private final SimpleParsers simpleParsers;
-    private Provider<ObjectParserBuilder> objectParserBuilder;
+    private Provider<ObjectNodeParserBuilder> objectParserBuilder;
     private final XmlUtil xmlUtil;
-    private final JsonUtil jsonUtil;
 
     @Inject
-    public Parsing(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectParserBuilder> objectParserBuilder, XmlUtil xmlUtil, JsonUtil jsonUtil){
+    public Parsing(ArrayParserFactory arrayParserFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil){
         this.arrayParserFactory = arrayParserFactory;
         this.simpleParsers = simpleParsers;
         this.objectParserBuilder = objectParserBuilder;
         this.xmlUtil = xmlUtil;
-        this.jsonUtil = jsonUtil;
     }
 
     /**
-     * Returns a new ObjectParserBuilder.
-     * @return  A new instance of ObjectParserBuilder
+     * Returns a new ObjectNodeParserBuilder.
+     * @return  A new instance of ObjectNodeParserBuilder
      */
-    public ObjectParserBuilder obj(){
+    public ObjectNodeParserBuilder obj(){
         return objectParserBuilder.get();
     }
 
     /**
-     * Returns a new ObjectParserBuilder.
+     * Returns a new ObjectNodeParserBuilder.
      * @param xpath Root xpath to start parsing from
-     * @return  A new instance of ObjectParserBuilder
+     * @return  A new instance of ObjectNodeParserBuilder
      */
-    public ObjectParserBuilder obj(String xpath){
+    public ObjectNodeParserBuilder obj(String xpath){
         return objectParserBuilder.get().xpath(xpath);
     }
 
 
     /**
-     * Returns an ArrayParser which will process a Node into an ArrayNode of Strings
+     * Returns an ArrayNodeParser which will process a Node into an ArrayNode of Strings
      * @param xpath The Xpath pointing a list of Nodes that will become the array
-     * @return A new instance of ArrayParser
+     * @return A new instance of ArrayNodeParser
      */
-    public ArrayParser arr(String xpath){
+    public Parser<ArrayNode> arr(String xpath){
         return arrayParserFactory.create(xpath, simpleParsers.textParser());
     }
 
     /**
-     * Returns an ArrayParser which will process a Node into an ArrayNode of Objects
+     * Returns an ArrayNodeParser which will process a Node into an ArrayNode of Objects
      * @param xpath The Xpath pointing a list of Nodes that will become the array
-     * @param builder A ObjectParserBuilder that is configured to Parse Objects, which will
+     * @param builder A ObjectNodeParserBuilder that is configured to Parse Objects, which will
      *                become children of the Array.
-     * @return A new instance of ArrayParser
+     * @return A new instance of ArrayNodeParser
      */
-    public ArrayParser arr(String xpath, ObjectParserBuilder builder){
+    public Parser<ArrayNode> arr(String xpath, ObjectNodeParserBuilder builder){
         return arrayParserFactory.create(xpath, builder.build());
     }
 
     /**
-     * Returns an ArrayParser which will process a Node into an ArrayNode of Objects/Arrays/Values
+     * Returns an ArrayNodeParser which will process a Node into an ArrayNode of Objects/Arrays/Values
      * @param xpath The Xpath pointing a list of Nodes that will become the array
      * @param parser A Parser that will parse Objects/Arrays/Values, which will
      *                become children of the Array.
-     * @return A new instance of ArrayParser
+     * @return A new instance of ArrayNodeParser
      */
-    public ArrayParser arr(String xpath, Parser<?> parser){
+    public Parser<ArrayNode> arr(String xpath, Parser<?> parser){
         return arrayParserFactory.create(xpath, parser);
     }
 
@@ -84,7 +84,7 @@ public class Parsing {
      *                    applied to the string value of the Node.
      * @return The function wrapped, and ready to be passed as a parameter
      */
-    public Parser with(Function<String, Object> transformer){
+    public Parser<JsonNode> with(Function<String, Object> transformer){
         return simpleParsers.textParser(transformer);
     }
 

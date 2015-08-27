@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collector;
 
-public class ArrayParser implements Parser<ArrayNode> {
+public class ArrayNodeParser implements Parser<ArrayNode> {
     private String xpath;
     private Parser<?> parser;
     private XmlUtil xmlUtil;
     private JsonUtil jsonUtil;
 
     @Inject
-    public ArrayParser(@Assisted String xpath, @Assisted Parser<?> parser, XmlUtil xmlUtil, JsonUtil jsonUtil) {
+    public ArrayNodeParser(@Assisted String xpath, @Assisted Parser<?> parser, XmlUtil xmlUtil, JsonUtil jsonUtil) {
         this.xpath = xpath;
         this.parser = parser;
         this.xmlUtil = xmlUtil;

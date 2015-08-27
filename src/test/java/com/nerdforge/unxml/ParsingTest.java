@@ -2,7 +2,7 @@ package com.nerdforge.unxml;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.nerdforge.unxml.factory.ParsingFactory;
-import com.nerdforge.unxml.parsers.ArrayParser;
+import com.nerdforge.unxml.parsers.ArrayNodeParser;
 import com.nerdforge.unxml.parsers.Parser;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class ParsingTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Parser dateParser = parsing.simple().dateParser(formatter); // (2a)
 
-        ArrayParser parser = parsing.arr("/a:feed/a:entry",
+        Parser<ArrayNode> parser = parsing.arr("/a:feed/a:entry",
                 parsing.obj()
                         .attribute("id", "@id", parsing.with(Integer::parseInt)) // (3)
                         .attribute("name", "a:name")

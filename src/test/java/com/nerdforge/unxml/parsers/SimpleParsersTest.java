@@ -7,8 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import java.util.function.Function;
-
 import static org.fest.assertions.Assertions.*;
 
 public class SimpleParsersTest {
@@ -24,7 +22,7 @@ public class SimpleParsersTest {
         String content = "<root></root>";
         Document input = parsing.xml().document(content);
 
-        ObjectParser parser = parsing.obj().attribute("id", "/root/entry/id").build();
+        Parser<ObjectNode> parser = parsing.obj().attribute("id", "/root/entry/id").build();
 
         ObjectNode node = parser.apply(input);
         assertThat(node.at("/id").isNull()).isTrue();
@@ -36,7 +34,7 @@ public class SimpleParsersTest {
         Document input = parsing.xml().document(content);
         Parser numberParser = parsing.simple().numberParser();
 
-        ObjectParser parser = parsing.obj()
+        Parser<ObjectNode> parser = parsing.obj()
                 .attribute("id", "/root/id", numberParser)
                 .attribute("missing", "/root/missing", numberParser)
                 .build();

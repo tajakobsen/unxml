@@ -34,11 +34,11 @@ public class UnXmlModule extends PrivateModule {
     protected void configure() {
         // Generate Factories
         install(new FactoryModuleBuilder()
-                .implement(ObjectParser.class, ObjectParser.class)
+                .implement(ObjectNodeParser.class, ObjectNodeParser.class)
                 .build(ObjectParserFactory.class));
 
         install(new FactoryModuleBuilder()
-                .implement(ArrayParser.class, ArrayParser.class)
+                .implement(ArrayNodeParser.class, ArrayNodeParser.class)
                 .build(ArrayParserFactory.class));
 
         // JSON Mapper

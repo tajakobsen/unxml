@@ -77,7 +77,7 @@ import com.nerdforge.unxml.factory.ParsingFactory;
 ...
 
 public class MyController {
-  public JsonNode getJsonFromXml(String inputXmlString) {
+  public ObjectNode getJsonFromXml(String inputXmlString) {
     Parsing parsing = ParsingFactory.getInstance().create(); // (1)
     Document document = parsing.xml().document(inputXmlString); // (2)
     

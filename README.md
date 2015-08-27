@@ -64,27 +64,29 @@ import com.nerdforge.unxml.factory.ParsingFactory;
 
 public class MyController {
   public JsonNode getJsonFromXml(String inputXmlString) {
-    Parsing parsing = ParsingFactory.getInstance().create();
-    Document document = parsing.xml().document(inputXmlString);
+    Parsing parsing = ParsingFactory.getInstance().create(); // (1)
+    Document document = parsing.xml().document(inputXmlString); // (2)
     
-    Parser<ObjectNode> parser = parsing.obj() // (1)
-      .attribute("id", "/root/id", parsing.with(Integer::parseInt)) // (2)
-      .attribute("title", "//title") // (3)
-      .build(); // (4)
+    Parser<ObjectNode> parser = parsing.obj() // (3)
+      .attribute("id", "/root/id", parsing.with(Integer::parseInt)) // (4)
+      .attribute("title", "//title") // (5)
+      .build(); // (6)
 
-    ObjectNode node = parser.apply(document); // (5)
+    ObjectNode node = parser.apply(document); // (7)
     return node;
   }
 }
 ```
 
- 1. The `Parsers.obj()` returns an [ObjectParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectParserBuilder.java)
- 2. The resulting json object gets attribute with key = `id`.
+ 1. Uses the [ParsingFactory](src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java) to get an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
+ 2. Parsing also gives access to an XML-utility object by using the `xml()`-method.
+ 3. The `Parsers.obj()` returns an [ObjectNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectNodeParserBuilder.java)
+ 4. The resulting json object gets attribute with key = `id`.
    * The value is first read as the `String` content of the xpath: `/root/id` in the xml.
    * It will apply the [Integer.parseInt](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html) method, to the `String`content, and return the attribute as an `Integer`.
- 3. The resulting json object gets an attribute with id = `title`, and the value is `String` content on the xpath `//title`.
- 4. Creates a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) that will output a [JsonNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html).
- 5. [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [JsonNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html)
+ 5. The resulting json object gets an attribute with id = `title`, and the value is `String` content on the xpath `//title`.
+ 6. Creates a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) that will output an [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html).
+ 7. [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html)
 
 #### Return Json object
 
@@ -121,7 +123,7 @@ public class MyController {
   public ArrayNode getArrayFromXml(String inputXmlString) {
     Document document = parsing.xml().document(inputXmlString);
     
-    ArrayParser parser = parsing.arr("/root/entry", parsing.arr("list/value")); // (2)
+    Parser<ArrayNode> parser = parsing.arr("/root/entry", parsing.arr("list/value")); // (2)
     ArrayNode node = parser.apply(document);
     return node;
   }
@@ -129,7 +131,7 @@ public class MyController {
 ```
 
  1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to `install` the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
- 2. Creates an [ArrayParser](src/main/java/com/nerdforge/unxml/parsers/ArrayParser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
+ 2. Creates an [Parser<ArrayNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
   * The first `arr()` will pick out each `entry` node *(in the xml-file)*.
   * The second `arr()` will pick out each `value` in the `list`.
 
@@ -141,7 +143,7 @@ public class MyController {
 
 ## Example - Complex structures
 
-You can of course combine [ObjectParsers](src/main/java/com/nerdforge/unxml/parsers/ObjectParser.java), [ArrayParsers](src/main/java/com/nerdforge/unxml/parsers/ArrayParser.java) and [predefined parsers](src/main/java/com/nerdforge/unxml/parsers/SimpleParsers.java) to map to more complex structures.
+You can of course combine [Parser<ObjectNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) with [Parser<ArrayNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) and [predefined parsers](src/main/java/com/nerdforge/unxml/parsers/SimpleParsers.java) to map to more complex structures.
 
 #### The input XML string
 
@@ -170,7 +172,7 @@ public class MyController {
     Document input = parsing.xml().document(inputXmlString);
     Parser dateParser = parsing.simple().dateParser(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // (2)
 
-    ArrayParser parser = parsing.arr("/a:feed/a:entry", // (3)
+    Parser<ArrayNode> parser = parsing.arr("/a:feed/a:entry", // (3)
       parsing.obj()
         .attribute("id", "@id", parsing.with(Integer::parseInt)) // (4)
         .attribute("name", "a:name")
@@ -217,19 +219,17 @@ public class MyController {
 Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [functional interface](https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html), it can be mapped directly, like this:
 
 ```java
-Parsing parsing = ParsingFactory.getInstance(namespaces).create(); // (1)
-Parser parser = ... // se above for examples
-Document document = parsing.xml().document(inputXmlString); // (2)
+Parsing parsing = ParsingFactory.getInstance(namespaces).create();
+Parser<ObjectNode> parser = parsing.obj()... // se above for examples
+Document document = parsing.xml().document(inputXmlString);
 
 // Apply to an Optional
-Optional<JsonNode> result = Optional.of(document).map(parser); // (3)
+Optional<ObjectNode> result = Optional.of(document).map(parser); // (1)
 
 // Apply to a Stream
 List<Document> documents = ...
-List<JsonNode> results = documents.stream().map(parser).collect(toList()); // (4)
+List<ObjectNode> results = documents.stream().map(parser).collect(toList()); // (2)
 ```
 
- 1. Uses the [ParsingFactory](src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java) to get an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
- 2. Parsing also gives access to an XML-utility object by using the `xml()`-method.
- 3. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
- 4. Shorthand for `documents.stream().map(parser::apply).collect(toList())`
+ 1. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
+ 2. Shorthand for `documents.stream().map(parser::apply).collect(toList())`

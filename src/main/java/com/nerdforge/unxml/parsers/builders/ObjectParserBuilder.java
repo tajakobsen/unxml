@@ -95,8 +95,10 @@ public class ObjectParserBuilder {
     }
 
     /**
-     * Returns some Json utility methods
-     * @return An instance of JsonUtil
+     * Uses Jackson to instansiate the ObjectNode as a Java Object of type A.
+     * @param valueType The type of class that should be instansiated
+     * @param <A> The Class the InstanceParser will return
+     * @return A parser that outputs an object of Class A.
      */
     public <A> InstanceParser<A> as(Class<A> valueType) {
         return build().<A>andThen(jsonUtil.as(valueType))::apply;

@@ -37,11 +37,11 @@ To create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) you 
 Parsing parsing = ParsingFactory.getInstance().create();
 
 // create parser that will output a Jackson ObjectNode
-Parser parser = parsing.obj().attribute("resultKey", "//my-xpath").build();
-Parser parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
+Parser<ObjectNode> parser = parsing.obj().attribute("resultKey", "//my-xpath").build();
+Parser<ObjectNode> parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
 
 // create parser that will output a Jackson ArrayNode
-Parser parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));
+Parser<ArrayNode> parser3 = parsing.arr(parsing.obj().attribute("id", "@id"));
 ```
 
 ## Example - Parsing an object
@@ -67,12 +67,12 @@ public class MyController {
     Parsing parsing = ParsingFactory.getInstance().create();
     Document document = parsing.xml().document(inputXmlString);
     
-    Parser parser = parsing.obj() // (1)
+    Parser<ObjectNode> parser = parsing.obj() // (1)
       .attribute("id", "/root/id", parsing.with(Integer::parseInt)) // (2)
       .attribute("title", "//title") // (3)
       .build(); // (4)
 
-    JsonNode node = parser.apply(document); // (5)
+    ObjectNode node = parser.apply(document); // (5)
     return node;
   }
 }
@@ -218,7 +218,7 @@ Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [fu
 
 ```java
 Parsing parsing = ParsingFactory.getInstance(namespaces).create(); // (1)
-Parser parser = ... // se below for examples
+Parser parser = ... // se above for examples
 Document document = parsing.xml().document(inputXmlString); // (2)
 
 // Apply to an Optional

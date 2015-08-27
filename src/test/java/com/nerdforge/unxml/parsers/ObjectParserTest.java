@@ -35,7 +35,7 @@ public class ObjectParserTest {
             .attribute("id", "/root/id", parsing.with(Integer::parseInt))
             .attribute("title", "//title");
 
-        ObjectParser parser = builder.build();
+        Parser<ObjectNode> parser = builder.build();
         JsonNode node = parser.apply(input);
 
         assertThat(node.get("id").asInt()).isEqualTo(1);

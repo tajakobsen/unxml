@@ -7,7 +7,7 @@ targetCompatibility = 1.8
 
 archivesBaseName = "unxml"
 group   = 'com.nerdforge'
-version = '0.7-SNAPSHOT'
+version = '0.8'
 
 repositories {
     mavenLocal()

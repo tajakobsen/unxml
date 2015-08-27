@@ -68,7 +68,8 @@ public class ArrayParserTest {
         assertThat(node.at("/0/title").asText()).isEqualTo("mytitle");
 
         // Make an object
-        List<Article> articles = parser.as(Article.class).apply(input);
+        ListParser<Article> articleListParser = parser.as(Article.class);
+        List<Article> articles = articleListParser.apply(input);
 
         assertThat(articles).hasSize(2);
         assertThat(articles.get(0).id).isEqualTo(1);

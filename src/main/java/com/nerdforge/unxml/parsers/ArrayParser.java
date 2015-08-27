@@ -44,8 +44,8 @@ public class ArrayParser implements Parser<ArrayNode> {
      * Returns the parsed result as a List of Objects of class A
      * @return Result as a List of Objects
      */
-    public <A> Function<Node, List<A>> as(Class<A> valueType) {
-        return this.andThen(jsonUtil.asList(valueType));
+    public <A> ListParser<A> as(Class<A> valueType){
+        return this.<List<A>>andThen(jsonUtil.asList(valueType))::apply;
     }
 
     private Collector<JsonNode, ArrayNode, ArrayNode> toArrayNode(){

@@ -6,6 +6,9 @@ import com.nerdforge.unxml.factory.ParsingFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
+
+import java.util.function.Function;
+
 import static org.fest.assertions.Assertions.*;
 
 public class SimpleParsersTest {

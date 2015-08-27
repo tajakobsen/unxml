@@ -1,10 +1,12 @@
 package com.nerdforge.unxml.parsers.builders;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.nerdforge.unxml.factory.ObjectParserFactory;
 import com.nerdforge.unxml.json.JsonUtil;
+import com.nerdforge.unxml.parsers.InstanceParser;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.ObjectParser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
@@ -96,8 +98,8 @@ public class ObjectParserBuilder {
      * Returns some Json utility methods
      * @return An instance of JsonUtil
      */
-    public <A> Function<Node, A> as(Class<A> valueType){
-        return build().andThen(jsonUtil.as(valueType));
+    public <A> InstanceParser<A> as(Class<A> valueType) {
+        return build().<A>andThen(jsonUtil.as(valueType))::apply;
     }
 
     private Map<String, Parser<?>> wrapAttributes(String path){

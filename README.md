@@ -46,7 +46,7 @@ Parser<ArrayNode> parser3 = parsing.arr(parsing.obj().attribute("id", "@id")).bu
 
 ## Parsing to an Object or List
 
-By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectParserBuilder.java) or [ArrayParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ArrayParserBuilder.java), you can have Jackson instansiate an object or a `List` as part of the parsing process.
+By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectParserBuilder.java) or [ArrayParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ArrayParserBuilder.java), you can have Jackson instansiate an `Object` or a `List` as part of the parsing process.
 
 ```java
 // create a parser that will output an Object instance
@@ -137,7 +137,10 @@ public class MyController {
   public ArrayNode getArrayFromXml(String inputXmlString) {
     Document document = parsing.xml().document(inputXmlString);
     
-    Parser<ArrayNode> parser = parsing.arr("/root/entry", parsing.arr("list/value")).build(); // (2)
+    Parser<ArrayNode> parser = parsing.arr("/root/entry",
+      parsing.arr("list/value")
+    ).build(); // (2)
+
     ArrayNode node = parser.apply(document);
     return node;
   }

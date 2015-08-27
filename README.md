@@ -20,11 +20,21 @@ To add a dependency on unXml using Maven, use the following:
 
 ## Parser
 
-A [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do the following transformation:
+A [Parser<ObjectNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do the following transformation:
 
-[Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [JsonNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html)
+[Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html)
+
 ```java
-public interface Parser { JsonNode apply(Node node); }
+public interface Parser<ObjectNode> { ObjectNode apply(Node node); }
+```
+
+
+And a [Parser<ArrayNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) can do:
+
+[Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ArrayNode.html)
+
+```java
+public interface Parser<ArrayNode> { ArrayNode apply(Node node); }
 ```
 
 And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html), `Document` can also be used as input.

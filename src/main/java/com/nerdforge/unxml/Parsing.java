@@ -2,6 +2,7 @@ package com.nerdforge.unxml;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nerdforge.unxml.factory.ArrayNodeParserBuilderFactory;
+import com.nerdforge.unxml.json.JsonUtil;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
@@ -18,13 +19,15 @@ public class Parsing {
     private final SimpleParsers simpleParsers;
     private Provider<ObjectNodeParserBuilder> objectParserBuilder;
     private final XmlUtil xmlUtil;
+    private final JsonUtil jsonUtil;
 
     @Inject
-    public Parsing(ArrayNodeParserBuilderFactory arrayNodeFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil){
+    public Parsing(ArrayNodeParserBuilderFactory arrayNodeFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil, JsonUtil jsonUtil){
         this.arrayNodeFactory = arrayNodeFactory;
         this.simpleParsers = simpleParsers;
         this.objectParserBuilder = objectParserBuilder;
         this.xmlUtil = xmlUtil;
+        this.jsonUtil = jsonUtil;
     }
 
     /**
@@ -94,6 +97,15 @@ public class Parsing {
     public XmlUtil xml(){
         return xmlUtil;
     }
+
+    /**
+     * Returns some JSON utility methods
+     * @return An instance of JsonUtil
+     */
+    public JsonUtil json(){
+        return jsonUtil;
+    }
+
 
     /**
      * Returns an object with some simple preconfigured parsers

@@ -3,7 +3,7 @@ package com.nerdforge.unxml;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.PrivateModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
@@ -50,7 +50,7 @@ public class UnXmlModule extends PrivateModule {
         // JSON Mapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Jdk8Module());
-        mapper.registerModule(new JSR310Module());
+        mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         bind(ObjectMapper.class).annotatedWith(Names.named("json-mapper")).toInstance(mapper);
 

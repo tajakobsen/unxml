@@ -54,7 +54,7 @@ Parser<ArrayNode> parser3 = parsing.arr(
 
 ## Parsing to an Object or List
 
-By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectParserBuilder.java) or [ArrayParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ArrayParserBuilder.java), you can have Jackson instansiate an `Object` or a `List` as part of the parsing process.
+By using the `as`-method on [ObjectNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectNodeParserBuilder.java) or [ArrayNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ArrayNodeParserBuilder.java), you can have Jackson instansiate an `Object` or a `List` as part of the parsing process.
 
 ```java
 // create a parser that will output an Object instance

@@ -3,6 +3,8 @@ sudo: false
 language: java
 jdk:
   - oraclejdk8
+script:
+  - ./gradlew uploadArchives -PossrhUsername="${ossrhUsername}" -PossrhPassword="${ossrhPassword}"
 
 env:
   global:

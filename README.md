@@ -27,7 +27,7 @@ A [Parser&lt;ObjectNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.ja
 [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ArrayNode.html)
 
 
-And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html), `Document` can also be used as input.
+[Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) can also be used as input, since it extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html).
 
 ## Using Parsing to create a Parser
 

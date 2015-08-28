@@ -3,9 +3,6 @@ sudo: false
 language: java
 jdk:
   - oraclejdk8
-script:
-  - ./gradlew -PossrhUsername="${ossrhUsername}" -PossrhPassword="${ossrhPassword}"
-
 env:
   global:
     - secure: "jZtDKkP4VoNd4OhNhriQUsO2p9e8/cCC5LAc5AeSvQ4E77pbvAub9OGkN78xT0Vb9CTlMiVlzDgL3cVPBlI29EDEgEhkSE9T/qiueNt890t5V6M+saGV9EYcBm/5UEFGOI96ks3UAyzbSxu59wxEM7iCDe13LrPNdMDjoOICtO3dtfE5F5MCzNtZ9I5CXVuWSvBvdMADzzuqZfBeJ2OKngSUCuGKmKMetRqXCvYmoIWN1vD1WF3PQNYlqLzgiEiZpw2fyQgfvJxKeuoh0CY9TmufE0smCnvxCmmcLkoA9N7dH/PJqn54NdLPhoGoUrx7W4foRenRXCDZlliC+Wx4uJx0I7vD+o7WGqTRjszkqxIZz4+H29GaOs/km+yvIPV6b6hRg7ln75rMGLcNxtipDJ4OYXl2jJs9dukfVd7viq5fnjPQ4LTNp2T/TU+8dZQIsWLXt8YyhHNH8iKZgi72e6/3vec1qiRDRXPJqVilr1YM+ABpi34+hNab/emZI8SAne5z/AoEbWId1yGe+yJAS1Stf7KeDpqxsyM9wqsXwI++WxHaNMqwPOD5P7hGMtU0W5EnNDdKqknZRj0ULBPey7RSp9/KmWtztUCxI9krFt6FTijNLis74QSFoEhWt6CHxYQWMy9QQ5Hf78Zg+5Bda180H26qoZ7R23FeJMLKBZA="

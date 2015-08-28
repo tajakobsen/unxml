@@ -8,7 +8,6 @@ targetCompatibility = 1.8
 archivesBaseName = "unxml"
 group   = 'com.nerdforge'
 version = '0.9-SNAPSHOT'
-isReleaseVersion=version.toString().contains("-SNAPSHOT")
 
 repositories {
     mavenLocal()
@@ -52,7 +51,7 @@ artifacts {
 }
 
 signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    required { version.toString().contains("-SNAPSHOT") && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 

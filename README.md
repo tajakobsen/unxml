@@ -27,7 +27,7 @@ A [Parser&lt;ObjectNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.ja
 [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ArrayNode.html)
 
 
-And since [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html), `Document` can also be used as input.
+[Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) can also be used as input, since it extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html).
 
 ## Using Parsing to create a Parser
 
@@ -37,11 +37,18 @@ To create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) you 
 Parsing parsing = ParsingFactory.getInstance().create();
 
 // create parser that will output a Jackson ObjectNode
-Parser<ObjectNode> parser = parsing.obj().attribute("resultKey", "//my-xpath").build();
-Parser<ObjectNode> parser2 = parsing.obj("//my-root").attribute("id", "@id").build();
+Parser<ObjectNode> parser = parsing.obj()
+  .attribute("resultKey", "//my-xpath")
+  .build();
+  
+Parser<ObjectNode> parser2 = parsing.obj("//my-root")
+  .attribute("id", "@id")
+  .build();
 
 // create parser that will output a Jackson ArrayNode
-Parser<ArrayNode> parser3 = parsing.arr(parsing.obj().attribute("id", "@id")).build();
+Parser<ArrayNode> parser3 = parsing.arr(
+  parsing.obj().attribute("id", "@id")
+).build();
 ```
 
 ## Parsing to an Object or List
@@ -50,12 +57,12 @@ By using the `as`-method on [ObjectParserBuilder](src/main/java/com/nerdforge/un
 
 ```java
 // create a parser that will output an Object instance
-ObjectParser<User> userParser = parsing.obj(...).attribute(...).as(User.class);
-User user = userParser.apply(xmlDocument);
+ObjectParser<Foo> fooParser = parsing.obj(...).attribute(...).as(Foo.class);
+Foo foo = fooParser.apply(xmlDocument);
 
 // create a parser that will output a List of objects
-ObjectParser<List<User>> usersParser = parsing.arr(...).as(User.class);
-List<User> users = usersParser.apply(xmlDocument);
+ObjectParser<List<Bar>> barsParser = parsing.arr(...).as(Bar.class);
+List<Bar> bars = barsParser.apply(xmlDocument);
 ```
 
 ## Example - Parsing an object

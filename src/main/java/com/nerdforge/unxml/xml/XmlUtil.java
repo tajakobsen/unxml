@@ -12,12 +12,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -37,18 +39,34 @@ public class XmlUtil {
         this.namespaceContext = namespaceContext;
     }
 
+    public DocumentBuilder documentBuilder(){
+        try {
+            return factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Document document(URI uri){
+        try {
+            return documentBuilder().parse(uri.toString());
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Document document(File file){
         try {
-            return factory.newDocumentBuilder().parse(file);
-        } catch (SAXException | IOException | ParserConfigurationException  e) {
+            return documentBuilder().parse(file);
+        } catch (SAXException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public Document document(String input){
         try {
-            return factory.newDocumentBuilder().parse(new ByteArrayInputStream(input.getBytes(Charsets.UTF_8)));
-        } catch (SAXException | IOException | ParserConfigurationException  e) {
+            return documentBuilder().parse(new ByteArrayInputStream(input.getBytes(Charsets.UTF_8)));
+        } catch (SAXException | IOException e) {
             throw new RuntimeException(e);
         }
     }

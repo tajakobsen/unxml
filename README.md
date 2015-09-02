@@ -258,3 +258,8 @@ List<ObjectNode> results = documents.stream().map(parser).collect(toList()); // 
 
  1. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
  2. Shorthand for `documents.stream().map(parser::apply).collect(toList())`
+
+## Upcoming features
+
+ 1. Validators to ensure the format of content
+ 2. Always logging warnings when a value is missing (even without validation).

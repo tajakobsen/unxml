@@ -47,7 +47,7 @@ Parser<ObjectNode> parser2 = parsing.obj("//my-root")
   .build();
 
 // create parser that will output a Jackson ArrayNode
-Parser<ArrayNode> parser3 = parsing.arr(
+Parser<ArrayNode> parser3 = parsing.arr("//my-root",
   parsing.obj().attribute("id", "@id")
 ).build();
 ```

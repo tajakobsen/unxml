@@ -31,27 +31,6 @@ public class ParsingTest {
         Guice.createInjector(new UnXmlModule(namespaces)).injectMembers(this);
     }
 
-
-    @Test
-    public void test(){
-        // private Parsing parsing = ParsingFactory.getInstance().create();
-        String xml = "<Root><Orders><Order><CustomerID></CustomerID><EmployeeID></EmployeeID></Order></Orders></Root>";
-        Document document = parsing.xml().document(xml);
-
-        Parser<ObjectNode> parser = parsing.obj().attribute("data", "Root", recursiveParser()).build();
-
-        System.out.println(parser.apply(document).toString());
-    }
-
-    public Parser<ObjectNode> recursiveParser(){
-        return  parsing.obj()
-                .attribute("text", parsing.simple().nodeNameParser())
-                .attribute("children",
-                        parsing.arr("node()", parsing.with(this::recursiveParser) // recursivly
-                        )
-                ).build();
-    }
-
     @Test
     public void testParseObjectFromFile() {
         File file = Paths.get("src/test/xml/homer.xml").toFile();

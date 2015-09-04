@@ -91,11 +91,13 @@ public class Parsing {
         return simpleParsers.textParser(transformer);
     }
 
+    /**
+     * Creates a supplier that will get the parser lazily. This can be used for recursive parsing.
+     * @param supplier The Supplier that will privde the node at parse time.
+     * @return A Parser instance, that will unpack the supplied parser at parse time.
+     */
     public Parser<JsonNode> with(Supplier<Parser<?>> supplier){
-        return node -> {
-            //System.out.println("------" + node.getNodeName());
-            return supplier.get().apply(node);
-        };
+        return node -> supplier.get().apply(node);
     }
 
     /**

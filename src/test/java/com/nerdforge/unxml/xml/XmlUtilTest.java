@@ -14,8 +14,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
 
 import javax.inject.Inject;
-import javax.xml.xpath.XPathExpressionException;
-
 import static org.fest.assertions.Fail.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;

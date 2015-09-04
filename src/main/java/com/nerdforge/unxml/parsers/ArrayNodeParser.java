@@ -17,14 +17,12 @@ public class ArrayNodeParser implements Parser<ArrayNode> {
     private String xpath;
     private Parser<?> parser;
     private XmlUtil xmlUtil;
-    private JsonUtil jsonUtil;
 
     @Inject
-    public ArrayNodeParser(@Assisted String xpath, @Assisted Parser<?> parser, XmlUtil xmlUtil, JsonUtil jsonUtil) {
+    public ArrayNodeParser(@Assisted String xpath, @Assisted Parser<?> parser, XmlUtil xmlUtil) {
         this.xpath = xpath;
         this.parser = parser;
         this.xmlUtil = xmlUtil;
-        this.jsonUtil = jsonUtil;
     }
 
     /**

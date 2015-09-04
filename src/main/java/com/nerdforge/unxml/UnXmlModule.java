@@ -14,6 +14,9 @@ import com.nerdforge.unxml.factory.ArrayNodeParserFactory;
 import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
 import com.nerdforge.unxml.xml.SimpleNamespaceContext;
 import com.nerdforge.unxml.xml.XmlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.apache.xerces.impl.Constants.*;
 
 import javax.xml.XMLConstants;
@@ -46,6 +49,9 @@ public class UnXmlModule extends PrivateModule {
         install(new FactoryModuleBuilder()
                 .implement(ArrayNodeParserBuilder.class, ArrayNodeParserBuilder.class)
                 .build(ArrayNodeParserBuilderFactory.class));
+
+        // Logger
+        bind(Logger.class).toInstance(LoggerFactory.getLogger("unXml"));
 
         // JSON Mapper
         ObjectMapper mapper = new ObjectMapper();

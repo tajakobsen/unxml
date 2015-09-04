@@ -1,23 +1,24 @@
 package com.nerdforge.unxml.parsers;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.inject.Guice;
 import com.nerdforge.unxml.Parsing;
-import com.nerdforge.unxml.factory.ParsingFactory;
+import com.nerdforge.unxml.UnXmlModule;
 import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-
+import javax.inject.Inject;
 import java.util.List;
-
 import static org.fest.assertions.Assertions.*;
 
 public class ArrayNodeParserTest {
-    private static Parsing parsing;
+    @Inject
+    private Parsing parsing;
 
-    @BeforeClass
-    public static void before(){
-        parsing = ParsingFactory.getInstance().create();
+    @Before
+    public void before(){
+        Guice.createInjector(new UnXmlModule()).injectMembers(this);
     }
 
     @Test

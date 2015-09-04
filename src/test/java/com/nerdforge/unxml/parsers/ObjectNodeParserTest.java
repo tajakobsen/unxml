@@ -1,25 +1,41 @@
 package com.nerdforge.unxml.parsers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Guice;
+import com.google.inject.Module;
+import com.google.inject.testing.fieldbinder.Bind;
+import com.google.inject.testing.fieldbinder.BoundFieldModule;
+import com.google.inject.util.Modules;
 import com.nerdforge.unxml.Parsing;
-import com.nerdforge.unxml.factory.ParsingFactory;
+import com.nerdforge.unxml.UnXmlModule;
 import com.nerdforge.unxml.parsers.builders.ObjectNodeParserBuilder;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import javax.inject.Inject;
 import java.util.function.Function;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ObjectNodeParserTest {
-    private static Parsing parsing;
+    @Inject
+    private Parsing parsing;
 
-    @BeforeClass
-    public static void before(){
-        parsing = ParsingFactory.getInstance().create();
+    @Bind
+    private Logger logger;
+
+    @Before
+    public  void before(){
+        logger = mock(Logger.class);
+        Module testModule = Modules.override(new UnXmlModule()).with(BoundFieldModule.of(this));
+        Guice.createInjector(testModule).injectMembers(this);
     }
 
     @Test
@@ -32,7 +48,7 @@ public class ObjectNodeParserTest {
             .attribute("title", "//title");
 
         Parser<ObjectNode> parser = builder.build();
-        JsonNode node = parser.apply(input);
+        ObjectNode node = parser.apply(input);
 
         assertThat(node.get("id").asInt()).isEqualTo(1);
         assertThat(node.get("title").asText()).isEqualTo("mytitle");
@@ -44,6 +60,22 @@ public class ObjectNodeParserTest {
 
         assertThat(article.id).isEqualTo(1);
         assertThat(article.title).isEqualTo("mytitle");
+    }
+
+    @Test
+    public void testParseObject2() {
+        String inputXmlString = "<root><id>1</id><title>mytitle</title></root>";
+        Document input = parsing.xml().document(inputXmlString);
+
+        ObjectNodeParserBuilder builder = parsing.obj("root")
+                .attribute("id", "id", parsing.with(Integer::parseInt))
+                .attribute("title", "title");
+
+        Parser<ObjectNode> parser = builder.build();
+        ObjectNode node = parser.apply(input);
+
+        assertThat(node.get("id").asInt()).isEqualTo(1);
+        assertThat(node.get("title").asText()).isEqualTo("mytitle");
     }
 
     @Test
@@ -79,6 +111,9 @@ public class ObjectNodeParserTest {
                 .build();
         ObjectNode node = parser.apply(input);
         assertThat(node.path("sub").isNull()).isEqualTo(Boolean.TRUE);
+
+        verify(logger, times(1)).warn(anyString(), eq("//entry/title"), eq("#document"));
+        verify(logger, times(1)).warn(anyString(), eq("//entry/sub"), eq("#document"));
     }
 
     public static class Article {

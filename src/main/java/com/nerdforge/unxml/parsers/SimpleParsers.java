@@ -24,7 +24,7 @@ public class SimpleParsers {
     }
 
     public Parser<JsonNode> dateParser(){
-        return textParser(LocalDate::parse);
+        return node -> mapper.valueToTree(LocalDate.parse(node.getTextContent()).toString());
     }
 
     public Parser<JsonNode> dateParser(DateTimeFormatter formatter){

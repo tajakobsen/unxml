@@ -7,6 +7,9 @@ import com.nerdforge.unxml.parsers.Parser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
+
+import java.io.File;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,20 +28,9 @@ public class ParsingTest {
     }
 
     @Test
-    public void testParseObject() {
-        String inputXmlString = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">" +
-                "  <entry id=\"1\">" +
-                "    <name>Homer Simpson</name>" +
-                "    <birthday>1956-03-01</birthday>" +
-                "    <email xmlns=\"http://www.w3.org/2007/app\">chunkylover53@aol.com</email>" +
-                "    <phoneNumbers>" +
-                "      <home>5551234</home>" +
-                "      <mobile>5555678</mobile>" +
-                "      <work>5559991</work>" +
-                "    </phoneNumbers>" +
-                "  </entry>" +
-                "</feed>";
-        Document input = parsing.xml().document(inputXmlString);
+    public void testParseObjectFromFile() {
+        File file = Paths.get("src/test/xml/homer.xml").toFile();
+        Document input = parsing.xml().document(file);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Parser dateParser = parsing.simple().dateParser(formatter); // (2a)
 

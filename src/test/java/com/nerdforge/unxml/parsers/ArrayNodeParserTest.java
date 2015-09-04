@@ -47,10 +47,10 @@ public class ArrayNodeParserTest {
         String content = "<root>" +
                     "<entry>" +
                         "<id>1</id>" +
-                        "<title>mytitle</title>" +
+                        "<title>myTitle</title>" +
                     "</entry><entry>" +
                         "<id>2</id>" +
-                        "<title>mytitle2</title>" +
+                        "<title>myTitle2</title>" +
                     "</entry>" +
                 "</root>";
         Document input = parsing.xml().document(content);
@@ -64,18 +64,18 @@ public class ArrayNodeParserTest {
 
         assertThat(node.size()).isEqualTo(2);
         assertThat(node.at("/0/id").asInt()).isEqualTo(1);
-        assertThat(node.at("/0/title").asText()).isEqualTo("mytitle");
+        assertThat(node.at("/0/title").asText()).isEqualTo("myTitle");
 
         // Make an object
-        ObjectParser<List<Article>> articleListParser = builder.as(Article.class);
-        List<Article> articles = articleListParser.apply(input);
+        ObjectParser<List<Foo>> articleListParser = builder.as(Foo.class);
+        List<Foo> foos = articleListParser.apply(input);
 
-        assertThat(articles).hasSize(2);
-        assertThat(articles.get(0).id).isEqualTo(1);
-        assertThat(articles.get(0).title).isEqualTo("mytitle");
+        assertThat(foos).hasSize(2);
+        assertThat(foos.get(0).id).isEqualTo(1);
+        assertThat(foos.get(0).title).isEqualTo("myTitle");
     }
 
-    public static class Article {
+    public static class Foo {
         public Integer id;
         public String title;
     }

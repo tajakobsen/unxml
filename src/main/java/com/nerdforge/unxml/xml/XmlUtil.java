@@ -1,12 +1,15 @@
 package com.nerdforge.unxml.xml;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,51 +28,49 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
 
 @Singleton
 public class XmlUtil {
     private final Logger logger;
     private final DocumentBuilderFactory factory;
+    private final ErrorHandler errorHandler;
+    private final NamespaceContext namespaceContext;
     private XPathFactory xpathFactory = XPathFactory.newInstance();
-    private NamespaceContext namespaceContext;
 
     @Inject
-    public XmlUtil(Logger logger, DocumentBuilderFactory factory, NamespaceContext namespaceContext){
+    public XmlUtil(Logger logger, DocumentBuilderFactory factory, ErrorHandler errorHandler, NamespaceContext namespaceContext){
         this.logger = logger;
         this.factory = factory;
+        this.errorHandler = errorHandler;
         this.namespaceContext = namespaceContext;
     }
 
-    public DocumentBuilder documentBuilder(){
-        try {
-            return factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Document document(URI uri){
-        try {
-            return documentBuilder().parse(uri.toString());
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Document document(File file){
-        try {
-            return documentBuilder().parse(file);
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        checkNotNull(file);
+        return document(file.toURI());
     }
 
-    public Document document(String input){
+    public Document document(URI uri) {
+        checkNotNull(uri);
+        return document(new InputSource(uri.toASCIIString()));
+    }
+
+
+    public Document document(String str){
+        checkNotNull(str);
+        InputStream input = new ByteArrayInputStream(str.getBytes(Charsets.UTF_8));
+        return document(new InputSource(input));
+    }
+
+    public Document document(InputSource source){
         try {
-            return documentBuilder().parse(new ByteArrayInputStream(input.getBytes(Charsets.UTF_8)));
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(errorHandler);
+            return builder.parse(source);
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw Throwables.propagate(e);
         }
     }
 
@@ -86,9 +87,10 @@ public class XmlUtil {
             XPath xpath = xpathFactory.newXPath();
             xpath.setNamespaceContext(namespaceContext);
             logger.debug("Evaluating XML with: xpath=[{}], node=[{}], returnType=[{}]", path, node.getNodeName(), returnType.getLocalPart());
-            return logWarnIfNull(xpath.evaluate(path, node, returnType), path, node.getNodeName());
+            Object result = xpath.evaluate(path, node, returnType);
+            return logWarnIfNull(result, path, node.getNodeName());
         } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
+            throw Throwables.propagate(e);
         }
     }
 

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.google.common.base.Throwables;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,6 +24,10 @@ public class JsonUtil {
         this.mapper = mapper;
     }
 
+    public ObjectMapper mapper(){
+        return mapper;
+    }
+
     public <A> Function<ObjectNode, A> as(Class<A> valueType){
         return node -> treeToValue(node, valueType);
     }
@@ -35,7 +40,7 @@ public class JsonUtil {
         try {
             return mapper.readValue(jsonParser, type);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw Throwables.propagate(e);
         }
     }
 
@@ -43,7 +48,7 @@ public class JsonUtil {
         try {
             return mapper.treeToValue(n, valueType);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw Throwables.propagate(e);
         }
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.base.Throwables;
 import com.google.inject.PrivateModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
@@ -12,10 +13,12 @@ import com.nerdforge.unxml.factory.ObjectNodeParserFactory;
 import com.nerdforge.unxml.parsers.*;
 import com.nerdforge.unxml.factory.ArrayNodeParserFactory;
 import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
+import com.nerdforge.unxml.xml.LoggingErrorHandler;
 import com.nerdforge.unxml.xml.SimpleNamespaceContext;
 import com.nerdforge.unxml.xml.XmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.ErrorHandler;
 
 import static org.apache.xerces.impl.Constants.*;
 
@@ -66,6 +69,9 @@ public class UnXmlModule extends PrivateModule {
         // bind document builder factory
         bind(DocumentBuilderFactory.class).toInstance(documentBuilderFactory());
 
+        // bind xml document builder error handler
+        bind(ErrorHandler.class).to(LoggingErrorHandler.class);
+
         bind(Parsing.class);
         expose(Parsing.class);
 
@@ -88,7 +94,7 @@ public class UnXmlModule extends PrivateModule {
 
             return factory;
         } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
+            throw Throwables.propagate(e);
         }
     }
 }

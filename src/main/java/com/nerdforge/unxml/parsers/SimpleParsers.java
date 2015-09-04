@@ -35,6 +35,10 @@ public class SimpleParsers {
         return textParser(Double::parseDouble);
     }
 
+    public Parser<JsonNode> nodeNameParser(){
+        return node -> mapper.valueToTree(node.getNodeName());
+    }
+
     public Parser<JsonNode> textParser(){
         return node -> mapper.valueToTree(node.getTextContent());
     }

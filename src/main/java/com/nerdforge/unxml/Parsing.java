@@ -13,6 +13,7 @@ import com.nerdforge.unxml.xml.XmlUtil;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Parsing {
     private final ArrayNodeParserBuilderFactory arrayNodeFactory;
@@ -88,6 +89,13 @@ public class Parsing {
      */
     public Parser<JsonNode> with(Function<String, Object> transformer){
         return simpleParsers.textParser(transformer);
+    }
+
+    public Parser<JsonNode> with(Supplier<Parser<?>> supplier){
+        return node -> {
+            //System.out.println("------" + node.getNodeName());
+            return supplier.get().apply(node);
+        };
     }
 
     /**

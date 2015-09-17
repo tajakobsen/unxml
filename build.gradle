@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'cobertura'
+apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = 1.8
@@ -10,6 +10,14 @@ targetCompatibility = 1.8
 archivesBaseName = "unxml"
 group   = 'com.nerdforge'
 version = '0.9-SNAPSHOT'
+
+cobertura {
+    // this is due to https://github.com/stevesaliman/gradle-cobertura-plugin/issues/81
+    coberturaVersion = '2.0.3'
+
+    coverageFormats = ['html', 'xml']
+    coverageSourceDirs = sourceSets.main.groovy.srcDirs
+}
 
 repositories {
     mavenLocal()
@@ -107,5 +115,3 @@ uploadArchives {
         }
     }
 }
-
-cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report

@@ -1,8 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'net.saliman.cobertura'
-apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -11,18 +9,22 @@ archivesBaseName = "unxml"
 group   = 'com.nerdforge'
 version = '0.9-SNAPSHOT'
 
-cobertura {
-    // this is due to https://github.com/stevesaliman/gradle-cobertura-plugin/issues/81
-    coberturaVersion = '2.0.3'
-
-    coverageFormats = ['html', 'xml']
-    coverageSourceDirs = sourceSets.main.groovy.srcDirs
-}
-
 repositories {
     mavenLocal()
     mavenCentral()
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:2.2.7"
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
+    }
+}
+apply plugin: 'net.saliman.cobertura'
+cobertura.coverageFormats = ['html', 'xml']
 
 dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.6.1'
@@ -38,8 +40,6 @@ dependencies {
     testCompile group: 'org.easytesting', name: 'fest-assert', version: '1.4'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '2.0.2-beta'
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.12'
-    classpath 'net.saliman:gradle-cobertura-plugin:2.0.0' // cobertura plugin, for coverage
-    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0' // for coverage
 }
 
 sourceSets {

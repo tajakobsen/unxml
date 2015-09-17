@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/tajakobsen/unxml.svg?branch=master)](https://travis-ci.org/tajakobsen/unxml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
-
+[![Coverage Status](https://coveralls.io/repos/tajakobsen/unxml/badge.svg?branch=master&service=github&t=2)](https://coveralls.io/github/tajakobsen/unxml?branch=master)
 Java 8 Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/package-summary.html) XML [Nodes](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) and creates Jackson [JsonNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html).
 
 ## Latest release

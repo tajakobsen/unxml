@@ -58,4 +58,28 @@ public class ParsingTest {
         assertThat(node.at("/0/phoneNumbers/1").asInt()).isEqualTo(5555678);
         assertThat(node.at("/0/phoneNumbers/2").asInt()).isEqualTo(5559991);
     }
+
+    @Test
+    public void testRecursiveParser(){
+        String content = "<root><id>1</id><name>Homer Simpson</name></root>";
+        Document input = parsing.xml().document(content);
+
+        Parser<ObjectNode> parser = parsing.obj()
+                .attribute("data", "root", recursiveParser())
+                .build();
+
+        ObjectNode node = parser.apply(input);
+
+        assertThat(node.at("/data/nodeType").asText()).isEqualTo("root");
+        assertThat(node.at("/data/children/0/nodeType").asText()).isEqualTo("id");
+        assertThat(node.at("/data/children/1/nodeType").asText()).isEqualTo("name");
+        assertThat(node.at("/data/children/0/children/0/nodeType").asText()).isEqualTo("#text");
+    }
+
+    private Parser<ObjectNode> recursiveParser(){
+        return parsing.obj()
+                .attribute("nodeType", parsing.simple().nodeNameParser())
+                .attribute("children", parsing.arr("node()", parsing.with(this::recursiveParser)))
+                .build();
+    }
 }

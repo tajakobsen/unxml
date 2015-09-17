@@ -64,6 +64,22 @@ public class SimpleParsersTest {
     }
 
     @Test
+    public void testNodeNameParser(){
+        String content = "<root><id>1</id></root>";
+        Document input = parsing.xml().document(content);
+        Parser nodeNameParser = parsing.simple().nodeNameParser();
+
+        Parser<ObjectNode> parser = parsing.obj()
+                .attribute("foo", "/root", nodeNameParser)
+                .attribute("bar", "/root/id", nodeNameParser)
+                .build();
+
+        ObjectNode node = parser.apply(input);
+        assertThat(node.at("/foo").asText()).isEqualTo("root");
+        assertThat(node.at("/bar").asText()).isEqualTo("id");
+    }
+
+    @Test
     public void testDateParser(){
         String content = "<root><date>2015-05-01</date></root>";
         Document input = parsing.xml().document(content);

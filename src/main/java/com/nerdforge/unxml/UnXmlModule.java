@@ -67,7 +67,9 @@ public class UnXmlModule extends PrivateModule {
         bind(NamespaceContext.class).toInstance(new SimpleNamespaceContext(namespaces));
 
         // bind document builder factory
-        bind(DocumentBuilderFactory.class).toInstance(documentBuilderFactory());
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        bind(DocumentBuilderFactory.class).toInstance(documentBuilderFactory);
 
         // bind xml document builder error handler
         bind(ErrorHandler.class).to(LoggingErrorHandler.class);
@@ -80,21 +82,5 @@ public class UnXmlModule extends PrivateModule {
 
         bind(SimpleParsers.class);
         expose(SimpleParsers.class);
-    }
-
-    private static DocumentBuilderFactory documentBuilderFactory() {
-        try {
-            String name = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(name, UnXmlModule.class.getClassLoader());
-            factory.setFeature(SAX_FEATURE_PREFIX + EXTERNAL_GENERAL_ENTITIES_FEATURE, false);
-            factory.setFeature(SAX_FEATURE_PREFIX + EXTERNAL_PARAMETER_ENTITIES_FEATURE, false);
-            factory.setFeature(XERCES_FEATURE_PREFIX + DISALLOW_DOCTYPE_DECL_FEATURE, true);
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            factory.setNamespaceAware(true);
-
-            return factory;
-        } catch (ParserConfigurationException e) {
-            throw Throwables.propagate(e);
-        }
     }
 }

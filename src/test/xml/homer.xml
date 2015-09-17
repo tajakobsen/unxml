@@ -1,4 +1,5 @@
-<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
     <entry id="1">
         <name>Homer Simpson</name>
         <birthday>1956-03-01</birthday>

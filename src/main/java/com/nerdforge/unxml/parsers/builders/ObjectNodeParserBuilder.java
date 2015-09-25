@@ -38,6 +38,15 @@ public class ObjectNodeParserBuilder implements ParserBuilder<ObjectNode> {
     }
 
     /**
+     * Special case where the xpath == json attribute name.
+     * @param xpath The xpath to the node with a text value, and the key in the resulting ObjectNode
+     * @return The builder itself, so commands can be chained
+     */
+    public ObjectNodeParserBuilder attribute(String xpath){
+        return attribute(xpath, xpath, simpleParsers.textParser());
+    }
+
+    /**
      * Specify an attribute by key, that reads the text value on an xpath
      * @param key The key in the resulting ObjectNode
      * @param xpath The xpath to the node with a text value

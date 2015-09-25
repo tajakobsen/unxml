@@ -69,7 +69,7 @@ public class ObjectNodeParserTest {
 
         ObjectNodeParserBuilder builder = parsing.obj("root")
                 .attribute("id", "id", parsing.with(Integer::parseInt))
-                .attribute("title", "title");
+                .attribute("title"); // test shorthand, where xpath and attribute is the same string
 
         Parser<ObjectNode> parser = builder.build();
         ObjectNode node = parser.apply(input);

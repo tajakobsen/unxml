@@ -7,7 +7,7 @@ Java 8 Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](ht
 
 ## Latest release
 
-The most recent release is unXml 0.8.1, released September 4, 2015.
+The most recent release is unXml 0.8.2, released September 25, 2015.
 
 To add a dependency on unXml using Maven, use the following:
 
@@ -15,7 +15,7 @@ To add a dependency on unXml using Maven, use the following:
 <dependency>
   <groupId>com.nerdforge</groupId>
   <artifactId>unxml</artifactId>
-  <version>0.8.1</version>
+  <version>0.8.2</version>
 </dependency>
 ```
 
@@ -45,9 +45,9 @@ Parser<ObjectNode> parser2 = parsing.obj("//my-root")
   .build();
 
 // create parser that will output a Jackson ArrayNode
-Parser<ArrayNode> parser3 = parsing.arr("//my-root",
-  parsing.obj().attribute("id", "@id")
-).build();
+Parser<ArrayNode> parser3 = parsing.arr("//my-root)
+  .attribute("id", "@id")
+  .build();
 ```
 
 ## Parsing to an Object or List
@@ -87,9 +87,9 @@ public class MyController {
     Parsing parsing = ParsingFactory.getInstance().create(); // (1)
     Document document = parsing.xml().document(inputXmlString); // (2)
     
-    Parser<ObjectNode> parser = parsing.obj() // (3)
-      .attribute("id", "/root/id", parsing.with(Integer::parseInt)) // (4)
-      .attribute("title", "//title") // (5)
+    Parser<ObjectNode> parser = parsing.obj("root") // (3)
+      .attribute("id", "id", parsing.number()) // (4)
+      .attribute("title") // (5)
       .build(); // (6)
 
     ObjectNode node = parser.apply(document); // (7)
@@ -103,8 +103,8 @@ public class MyController {
  3. The `Parsers.obj()` returns an [ObjectNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectNodeParserBuilder.java)
  4. The resulting json object gets attribute with key = `id`.
    * The value is first read as the `String` content of the xpath: `/root/id` in the xml.
-   * It will apply the [Integer.parseInt](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html) method, to the `String`content, and return the attribute as an `Integer`.
- 5. The resulting json object gets an attribute with id = `title`, and the value is `String` content on the xpath `//title`.
+   * It will apply the `SimpleParser.numberParser()` method, to the `String`content, and return the attribute as a JS `Number`.
+ 5. The resulting json object gets an attribute with id = `title`, and from the content on the xpath `title`.
  6. Creates a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) that will output an [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html).
  7. [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html)
 
@@ -144,7 +144,7 @@ public class MyController {
     Document document = parsing.xml().document(inputXmlString);
     
     Parser<ArrayNode> parser = parsing.arr("/root/entry",
-      parsing.arr("list/value")
+      parsing.arr("list/value", parsing.text())
     ).build(); // (2)
 
     ArrayNode node = parser.apply(document);
@@ -197,7 +197,7 @@ public class MyController {
 
     Parser<ArrayNode> parser = parsing.arr("/a:feed/a:entry", // (3)
       parsing.obj()
-        .attribute("id", "@id", parsing.with(Integer::parseInt)) // (4)
+        .attribute("id", "@id", parsing.number()) // (4)
         .attribute("name", "a:name")
         .attribute("birthday", "a:birthday", dateParser)
         .attribute("email", "app:email") // (5)

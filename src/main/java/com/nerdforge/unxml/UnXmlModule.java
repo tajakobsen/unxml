@@ -8,10 +8,12 @@ import com.google.inject.PrivateModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import com.nerdforge.unxml.factory.ArrayNodeParserBuilderFactory;
+import com.nerdforge.unxml.factory.ObjectArrayParserBuilderFactory;
 import com.nerdforge.unxml.factory.ObjectNodeParserFactory;
 import com.nerdforge.unxml.parsers.*;
 import com.nerdforge.unxml.factory.ArrayNodeParserFactory;
 import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
+import com.nerdforge.unxml.parsers.builders.ObjectArrayParserBuilder;
 import com.nerdforge.unxml.xml.LoggingErrorHandler;
 import com.nerdforge.unxml.xml.SimpleNamespaceContext;
 import com.nerdforge.unxml.xml.XmlUtil;
@@ -46,6 +48,10 @@ public class UnXmlModule extends PrivateModule {
         install(new FactoryModuleBuilder()
                 .implement(ArrayNodeParserBuilder.class, ArrayNodeParserBuilder.class)
                 .build(ArrayNodeParserBuilderFactory.class));
+
+        install(new FactoryModuleBuilder()
+                .implement(ObjectArrayParserBuilder.class, ObjectArrayParserBuilder.class)
+                .build(ObjectArrayParserBuilderFactory.class));
 
         // Logger
         bind(Logger.class).toInstance(LoggerFactory.getLogger("unXml"));

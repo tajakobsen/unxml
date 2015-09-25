@@ -34,7 +34,7 @@ public class ArrayNodeParserTest {
                 "</root>";
         Document input = parsing.xml().document(content);
 
-        Parser<ArrayNode> parser = parsing.arr("/root/entry", parsing.arr("list/value")).build();
+        Parser<ArrayNode> parser = parsing.arr("/root/entry", parsing.arr("list/value", parsing.text())).build();
 
         ArrayNode node = parser.apply(input);
         assertThat(node.size()).isEqualTo(2);
@@ -73,6 +73,31 @@ public class ArrayNodeParserTest {
         assertThat(foos).hasSize(2);
         assertThat(foos.get(0).id).isEqualTo(1);
         assertThat(foos.get(0).title).isEqualTo("myTitle");
+    }
+
+    @Test
+    public void testComboParserBuilder() {
+        String content = "<root>" +
+                    "<entry>" +
+                        "<id>1</id>" +
+                        "<title>myTitle</title>" +
+                    "</entry><entry>" +
+                        "<id>2</id>" +
+                        "<title>myTitle2</title>" +
+                    "</entry>" +
+                "</root>";
+        Document input = parsing.xml().document(content);
+
+        Parser<ArrayNode> parser = parsing.arr("/root/entry")
+                .attribute("id", "id", parsing.number())
+                .attribute("title")
+                .build();
+
+        ArrayNode node = parser.apply(input);
+
+        assertThat(node.size()).isEqualTo(2);
+        assertThat(node.at("/0/id").asInt()).isEqualTo(1);
+        assertThat(node.at("/0/title").asText()).isEqualTo("myTitle");
     }
 
     public static class Foo {

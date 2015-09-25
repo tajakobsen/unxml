@@ -2,10 +2,12 @@ package com.nerdforge.unxml;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nerdforge.unxml.factory.ArrayNodeParserBuilderFactory;
+import com.nerdforge.unxml.factory.ObjectArrayParserBuilderFactory;
 import com.nerdforge.unxml.json.JsonUtil;
 import com.nerdforge.unxml.parsers.Parser;
 import com.nerdforge.unxml.parsers.SimpleParsers;
 import com.nerdforge.unxml.parsers.builders.ArrayNodeParserBuilder;
+import com.nerdforge.unxml.parsers.builders.ObjectArrayParserBuilder;
 import com.nerdforge.unxml.parsers.builders.ObjectNodeParserBuilder;
 import com.nerdforge.unxml.parsers.builders.ParserBuilder;
 import com.nerdforge.unxml.xml.XmlUtil;
@@ -21,14 +23,16 @@ public class Parsing {
     private Provider<ObjectNodeParserBuilder> objectParserBuilder;
     private final XmlUtil xmlUtil;
     private final JsonUtil jsonUtil;
+    private final ObjectArrayParserBuilderFactory objectArrayParserBuilderFactory;
 
     @Inject
-    public Parsing(ArrayNodeParserBuilderFactory arrayNodeFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil, JsonUtil jsonUtil){
+    public Parsing(ArrayNodeParserBuilderFactory arrayNodeFactory, SimpleParsers simpleParsers, Provider<ObjectNodeParserBuilder> objectParserBuilder, XmlUtil xmlUtil, JsonUtil jsonUtil, ObjectArrayParserBuilderFactory objectArrayParserBuilderFactory){
         this.arrayNodeFactory = arrayNodeFactory;
         this.simpleParsers = simpleParsers;
         this.objectParserBuilder = objectParserBuilder;
         this.xmlUtil = xmlUtil;
         this.jsonUtil = jsonUtil;
+        this.objectArrayParserBuilderFactory = objectArrayParserBuilderFactory;
     }
 
     /**
@@ -48,14 +52,13 @@ public class Parsing {
         return objectParserBuilder.get().xpath(xpath);
     }
 
-
     /**
      * Returns an ArrayNodeParser which will process a Node into an ArrayNode of Strings
      * @param xpath The Xpath pointing a list of Nodes that will become the array
-     * @return A new instance of ArrayNodeParser
+     * @return A new instance of ObjectArrayParserBuilder
      */
-    public ArrayNodeParserBuilder arr(String xpath){
-        return arrayNodeFactory.create(xpath, simpleParsers.textParser());
+    public ObjectArrayParserBuilder arr(String xpath){
+        return objectArrayParserBuilderFactory.create(xpath);
     }
 
     /**
@@ -78,6 +81,22 @@ public class Parsing {
      */
     public ArrayNodeParserBuilder arr(String xpath, Parser<?> parser){
         return arrayNodeFactory.create(xpath, parser);
+    }
+
+    /**
+     * Utility method for getting a simple text parser
+     * @return A parser what will return the text of the parent Parser.
+     */
+    public Parser<JsonNode> text(){
+        return simpleParsers.textParser();
+    }
+
+    /**
+     * Utility method for getting a simple number parser (Parses text as double)
+     * @return A parser what will return the text of the parent Parser.
+     */
+    public Parser<JsonNode> number(){
+        return simpleParsers.numberParser();
     }
 
     /**

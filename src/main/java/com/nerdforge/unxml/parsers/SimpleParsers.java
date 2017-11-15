@@ -49,7 +49,7 @@ public class SimpleParsers {
 
     public Parser<JsonNode> elementParser(String xpath, Parser<?> parser){
         return node -> xmlUtil.parseNode(xpath, node)
-                .map(parser)
+                .<JsonNode>map(parser)
                 .orElse(NullNode.getInstance());
     }
 }

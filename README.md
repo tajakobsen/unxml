@@ -266,7 +266,7 @@ List<ObjectNode> results = documents.stream().map(parser).collect(toList()); // 
 [Document]: https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html
 [LocalDate]: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html 
 [functional interface]: https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html
-[ObjectNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html
-[ArrayNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ArrayNode.html
+[ObjectNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/node/ObjectNode.html
+[ArrayNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/node/ArrayNode.html
 [JsonNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/JsonNode.html
 [jackson-datatype-jsr310]: https://github.com/FasterXML/jackson-datatype-jsr310

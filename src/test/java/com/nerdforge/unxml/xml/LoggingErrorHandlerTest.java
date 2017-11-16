@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import javax.inject.Inject;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 public class LoggingErrorHandlerTest {

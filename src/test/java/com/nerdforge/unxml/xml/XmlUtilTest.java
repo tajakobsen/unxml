@@ -15,8 +15,8 @@ import org.xml.sax.SAXParseException;
 
 import javax.inject.Inject;
 import static org.fest.assertions.Fail.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,10 +38,11 @@ public class XmlUtilTest {
     }
 
     @Test
-    public void testParseInvalidXml(){
+    public void testParseInvalidXml() {
         try {
             String noEndTag = "<root>";
             util.document(noEndTag);
+            //noinspection ThrowableNotThrown
             fail("SAXParseException should have been thrown");
         } catch(RuntimeException e){
             verify(logger, times(1)).error(anyString(), any(SAXParseException.class));

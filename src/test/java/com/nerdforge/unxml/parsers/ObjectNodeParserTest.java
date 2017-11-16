@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import java.util.function.Function;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -117,7 +117,7 @@ public class ObjectNodeParserTest {
     }
 
     public static class Article {
-        public Integer id;
-        public String title;
+        Integer id;
+        String title;
     }
 }

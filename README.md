@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/tajakobsen/unxml.svg?branch=master)](https://travis-ci.org/tajakobsen/unxml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
 [![Coverage Status](https://coveralls.io/repos/tajakobsen/unxml/badge.svg?branch=master&service=github)](https://coveralls.io/github/tajakobsen/unxml?branch=master)
-Java 8 or later Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/package-summary.html) XML [Nodes](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) and creates Jackson [JsonNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html).
+Java 8 or later Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/package-summary.html) XML [Nodes](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) and creates Jackson [JsonNodes][JsonNode].
 
 ## Latest release
 
@@ -23,14 +23,14 @@ To add a dependency on unXml using Maven, use the following:
 
 A Parser | Created by | has `apply(node)` that does the transformation
 ---------|---------------|---------------
-[Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)&lt;ObjectNode&gt; | `parsing.obj().build()` | [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html)
-[Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)&lt;ArrayNode&gt; | `parsing.arr(...).build()` | [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ArrayNode.html)
+[Parser]&lt;ObjectNode&gt; | `parsing.obj().build()` | [Node] ➝ [ObjectNode]
+[Parser]&lt;ArrayNode&gt; | `parsing.arr(...).build()` | [Node] ➝ [ArrayNode]
 
-[Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) can also be used as input, since it extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html).
+[Document] can also be used as input, since it extends [Node].
 
 ## Using Parsing to create a Parser
 
-To create a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) you first need an instance of  [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
+To create a [Parser] you first need an instance of  [Parsing].
 
 ```java
 Parsing parsing = ParsingFactory.getInstance().create();
@@ -52,7 +52,7 @@ Parser<ArrayNode> parser3 = parsing.arr("//my-root)
 
 ## Parsing to an Object or List
 
-By using the `as`-method on [ObjectNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectNodeParserBuilder.java) or [ArrayNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ArrayNodeParserBuilder.java), you can have Jackson instansiate an `Object` or a `List` as part of the parsing process.
+By using the `as`-method on [ObjectNodeParserBuilder] or [ArrayNodeParserBuilder], you can have Jackson instansiate an `Object` or a `List` as part of the parsing process.
 
 ```java
 // create a parser that will output an Object instance
@@ -98,15 +98,15 @@ public class MyController {
 }
 ```
 
- 1. Uses the [ParsingFactory](src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java) to get an instance of [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java).
+ 1. Uses the [ParsingFactory] to get an instance of [Parsing].
  2. Parsing also gives access to an XML-utility object by using the `xml()`-method.
- 3. The `Parsers.obj()` returns an [ObjectNodeParserBuilder](src/main/java/com/nerdforge/unxml/parsers/builders/ObjectNodeParserBuilder.java)
+ 3. The `Parsers.obj()` returns an [ObjectNodeParserBuilder]
  4. The resulting json object gets attribute with key = `id`.
    * The value is first read as the `String` content of the xpath: `/root/id` in the xml.
    * It will apply the `SimpleParser.numberParser()` method, to the `String`content, and return the attribute as a JS `Number`.
  5. The resulting json object gets an attribute with id = `title`, and from the content on the xpath `title`.
- 6. Creates a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) that will output an [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html).
- 7. [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html)
+ 6. Creates a [Parser] that will output an [ObjectNode].
+ 7. [Node] ➝ [ObjectNode]
 
 #### Return Json object
 
@@ -153,8 +153,8 @@ public class MyController {
 }
 ```
 
- 1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to `install` the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
- 2. Creates a [Parser&lt;ArrayNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
+ 1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing] object into your class. (Remember to `install` the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
+ 2. Creates a [Parser&lt;ArrayNode&gt;][Parser], that can map to an [ArrayNode] of [ArrayNode] of `Strings`.
   * The first `arr()` will pick out each `entry` node *(in the xml-file)*.
   * The second `arr()` will pick out each `value` in the `list`.
 
@@ -166,7 +166,7 @@ public class MyController {
 
 ## Example - Complex structures
 
-You can of course combine [Parser<ObjectNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) with [Parser<ArrayNode>](src/main/java/com/nerdforge/unxml/parsers/Parser.java) and [predefined parsers](src/main/java/com/nerdforge/unxml/parsers/SimpleParsers.java) to map to more complex structures.
+You can of course combine [Parser<ObjectNode>][Parser] with [Parser<ArrayNode>][Parser] and [predefined parsers](src/main/java/com/nerdforge/unxml/parsers/SimpleParsers.java) to map to more complex structures.
 
 #### The input XML string
 
@@ -235,11 +235,11 @@ public class MyController {
 }]
 ```
 
- 1. The Jackson library will map a Java [LocalDate](https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html) as a JavaScript `Array` of `Numbers`. See the [documentation](https://github.com/FasterXML/jackson-datatype-jsr310).
+ 1. The Jackson library will map a Java [LocalDate] as a JavaScript `Array` of `Numbers`. See the [documentation][jackson-datatype-jsr310].
  
 ## Functional interface
 
-Since a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) is a [functional interface](https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html), it can be mapped directly, like this:
+Since a [Parser] is a [functional interface], it can be mapped directly, like this:
 
 ```java
 Parsing parsing = ParsingFactory.getInstance(namespaces).create();
@@ -256,3 +256,17 @@ List<ObjectNode> results = documents.stream().map(parser).collect(toList()); // 
 
  1. Applies the parser directly without doing a `Optional.of(document).map(parser::apply)`
  2. Shorthand for `documents.stream().map(parser::apply).collect(toList())`
+
+[Parsing]: src/main/java/com/nerdforge/unxml/Parsing.java
+[Parser]: src/main/java/com/nerdforge/unxml/parsers/Parser.java
+[ParsingFactory]: src/main/java/com/nerdforge/unxml/factory/ParsingFactory.java
+[ObjectNodeParserBuilder]: src/main/java/com/nerdforge/unxml/parsers/builders/ObjectNodeParserBuilder.java 
+[ArrayNodeParserBuilder]: src/main/java/com/nerdforge/unxml/parsers/builders/ArrayNodeParserBuilder.java
+[Node]: https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html
+[Document]: https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html
+[LocalDate]: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html 
+[functional interface]: https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html
+[ObjectNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html
+[ArrayNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ArrayNode.html
+[JsonNode]: http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/JsonNode.html
+[jackson-datatype-jsr310]: https://github.com/FasterXML/jackson-datatype-jsr310

@@ -116,8 +116,9 @@ public class ObjectNodeParserTest {
         verify(logger, times(1)).warn(anyString(), eq("//entry/sub"), eq("#document"));
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class Article {
-        Integer id;
-        String title;
+        public Integer id;
+        public String title;
     }
 }

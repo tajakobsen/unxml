@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/tajakobsen/unxml.svg?branch=master)](https://travis-ci.org/tajakobsen/unxml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nerdforge/unxml)
 [![Coverage Status](https://coveralls.io/repos/tajakobsen/unxml/badge.svg?branch=master&service=github)](https://coveralls.io/github/tajakobsen/unxml?branch=master)
-Java 8 Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/package-summary.html) XML [Nodes](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) and creates Jackson [JsonNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html).
+Java 8 or later Library for mapping XPaths to JSON-attributes. It parses [org.w3c.dom](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/package-summary.html) XML [Nodes](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) and creates Jackson [JsonNodes](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/JsonNode.html).
 
 ## Latest release
 
-The most recent release is unXml 0.8.2, released September 25, 2015.
+The most recent release is unXml 0.9, released November 16, 2017.
 
 To add a dependency on unXml using Maven, use the following:
 
@@ -15,7 +15,7 @@ To add a dependency on unXml using Maven, use the following:
 <dependency>
   <groupId>com.nerdforge</groupId>
   <artifactId>unxml</artifactId>
-  <version>0.8.2</version>
+  <version>0.9</version>
 </dependency>
 ```
 
@@ -23,8 +23,8 @@ To add a dependency on unXml using Maven, use the following:
 
 A Parser | Created by | has `apply(node)` that does the transformation
 ---------|---------------|---------------
-[Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)&lt;ObjectNode&gt; | `parsing.obj().build()` | [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html)
-[Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)&lt;ArrayNode&gt; | `parsing.arr(...).build()` | [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ArrayNode.html)
+[Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)&lt;ObjectNode&gt; | `parsing.obj().build()` | [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html)
+[Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java)&lt;ArrayNode&gt; | `parsing.arr(...).build()` | [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ArrayNode.html)
 
 [Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html) can also be used as input, since it extends [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html).
 
@@ -105,12 +105,12 @@ public class MyController {
    * The value is first read as the `String` content of the xpath: `/root/id` in the xml.
    * It will apply the `SimpleParser.numberParser()` method, to the `String`content, and return the attribute as a JS `Number`.
  5. The resulting json object gets an attribute with id = `title`, and from the content on the xpath `title`.
- 6. Creates a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) that will output an [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html).
- 7. [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/ObjectNode.html)
+ 6. Creates a [Parser](src/main/java/com/nerdforge/unxml/parsers/Parser.java) that will output an [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html).
+ 7. [Node](https://docs.oracle.com/javase/8/docs/api/index.html?org/w3c/dom/Node.html) ➝ [ObjectNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/ObjectNode.html)
 
 #### Return Json object
 
-```javascript
+```json
 {
   "id":1,
   "title":"mytitle"
@@ -154,7 +154,7 @@ public class MyController {
 ```
 
  1. By using [Google Guice](https://github.com/google/guice) you can directly inject a [Parsing](src/main/java/com/nerdforge/unxml/Parsing.java) object into your class. (Remember to `install` the [UnXmlModule](src/main/java/com/nerdforge/unxml/UnXmlModule.java) in your module).
- 2. Creates a [Parser&lt;ArrayNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.5/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
+ 2. Creates a [Parser&lt;ArrayNode&gt;](src/main/java/com/nerdforge/unxml/parsers/Parser.java), that can map to an [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/node/ArrayNode.html) of [ArrayNode](http://fasterxml.github.io/jackson-databind/javadoc/2.9/com/fasterxml/jackson/databind/node/ArrayNode.html) of `Strings`.
   * The first `arr()` will pick out each `entry` node *(in the xml-file)*.
   * The second `arr()` will pick out each `value` in the `list`.
 
@@ -225,7 +225,7 @@ public class MyController {
 
 #### Return Json object
 
-```javascript
+```json
 [{
   "birthday":[1956,3,1], // (1)
   "name":"Homer Simpson",
